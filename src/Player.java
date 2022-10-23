@@ -38,5 +38,12 @@ public class Player extends Person {
         return position;
     }
 
+    public void printPlayer()
+    {
+        System.out.println("First Name - " + this.getFirstName() + " | " + " Last Name - " + this.getLastName() + " | "+" Age -   " + this.getAge() +" | " + " Nationality - " + this.getNationality() + " | " + " Position - " + this.getPosition() + " | " + " Status : " + this.status + " | "+" Market Value - " + this.getMarketValue() + " Euro " );
+    }
+
+
+
 
 }

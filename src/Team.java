@@ -11,6 +11,78 @@ public class Team {
 
     List <Player> squad;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAbreviation() {
+        return abreviation;
+    }
+
+    public void setAbreviation(String abreviation) {
+        this.abreviation = abreviation;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getTown() {
+        return town;
+    }
+
+    public void setTown(String town) {
+        this.town = town;
+    }
+
+    public int getFoundationYear() {
+        return foundationYear;
+    }
+
+    public void setFoundationYear(int foundationYear) {
+        this.foundationYear = foundationYear;
+    }
+
+    public int getMaxSquadSize() {
+        return maxSquadSize;
+    }
+
+    public void setMaxSquadSize(int maxSquadSize) {
+        this.maxSquadSize = maxSquadSize;
+    }
+
+    public int getBudget() {
+        return budget;
+    }
+
+    public void setBudget(int budget) {
+        this.budget = budget;
+    }
+
+    public List<Player> getSquad() {
+        return squad;
+    }
+
+    public void setSquad(List<Player> squad) {
+        this.squad = squad;
+    }
+
+    public List<Sponsor> getSponsors() {
+        return sponsors;
+    }
+
+    public void setSponsors(List<Sponsor> sponsors) {
+        this.sponsors = sponsors;
+    }
+
     List <Sponsor> sponsors;
 
 
@@ -59,9 +131,11 @@ public class Team {
 
     boolean transferPlayerToTeam(Player player, Team otherTeam) //transfera un jucator de la other team, la team
     {
-        if(this.squad.size()>=this.maxSquadSize)
+        if(this.squad.size()>=this.maxSquadSize) {
             return false;
+        }
         else if (this.budget<player.getMarketValue()) {
+            System.out.println("bugetul nu ajunge");
             return false;
         }
         else {
@@ -71,6 +145,11 @@ public class Team {
             player.setStatus("Playing at" + this.name);
             return true;
         }
+    }
+
+    void printTeam()
+    {
+        System.out.println("Team - " + this.name + " | " + " Abreviation - " + this.abreviation + " | "+" Country -   " + this.country +" | " + " Town - " + this.town + " | " + " foundation year - " + this.foundationYear + " | " + " Squad Maximum Capacity - " + this.maxSquadSize + " | " + " Budget - " +this.budget + " Euro " );
     }
 }
 

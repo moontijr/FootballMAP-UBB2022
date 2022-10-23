@@ -1,11 +1,11 @@
 import java.util.*;
 public class Sponsor {
     private String name;
-    private String netWorth;
+    private int netWorth;
 
-    List <Team> sponsoredTeams;
+    List <Team> sponsoredTeams=new ArrayList<>();
 
-    public Sponsor(String name, String netWorth) {
+    public Sponsor(String name, int netWorth) {
         this.name = name;
         this.netWorth = netWorth;
     }
@@ -16,4 +16,5 @@ public class Sponsor {
         Sponsor sponsor=new Sponsor(this.name,this.netWorth);
         team.sponsors.add(sponsor);
     }
+
 }
