@@ -19,9 +19,11 @@ public class Main {
         Player player1=new Player("Ciprian","Deac",34,"Germany","Forward",1250000);
         Player player2=new Player("Octavian","Popescu",20,"Romania","Forward",10000000);
         Player player3=new Player("Ovidiu","Bic",34,"Romania","Forward",1250000);
+        Player player4=new Player("Ovidiu","Popescu",34,"Germany","Forward",1250000);
         repository.registerPlayer(player1);
         repository.registerPlayer(player2);
         repository.registerPlayer(player3);
+        repository.registerPlayer(player4);
 //        for(Player player: repository.allPlayers)
 //            System.out.println(player.getFirstName());
         team1.addPlayerToTeam(player1);
@@ -62,6 +64,14 @@ public class Main {
         Scanner scanner=new Scanner(System.in);
         UI ui = new UI(scanner,repository,controller);
         ui.startMenu();
+//        System.out.println("Tell us your details");
+//        System.out.println("Age: ");
+//        int age= scanner.nextInt();
+//        scanner.nextLine();
+//        System.out.println("First Name: ");
+//        String firstName = scanner.nextLine();
+//        System.out.println("Last Name: ");
+//        String lastName = scanner.nextLine();
 
 
 
