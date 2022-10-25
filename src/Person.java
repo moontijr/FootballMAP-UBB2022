@@ -1,11 +1,10 @@
-import java.util.Date;
 
 public abstract class Person {
-    private String firstName;
-    private String lastName;
+    private final String firstName;
+    private final String lastName;
 
-    private String nationality;
-    private int age;
+    private final String nationality;
+    private final int age;
 
     public Person(String firstName, String lastName, int age, String nationality) {
         this.firstName=firstName;

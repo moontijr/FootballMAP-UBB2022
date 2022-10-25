@@ -9,7 +9,7 @@ public class Team {
 
     private int budget;
 
-    List <Player> squad;
+    public List <Player> squad;
 
     public String getName() {
         return name;
@@ -83,7 +83,7 @@ public class Team {
         this.sponsors = sponsors;
     }
 
-    List <Sponsor> sponsors;
+    public List <Sponsor> sponsors;
 
 
     public Team(String name, String abreviation, String country, String town, int foundationYear, int maxSquadSize,int budget) {
@@ -99,6 +99,11 @@ public class Team {
 
     }
 
+    /**
+     * adds a player to a team
+     * @param player 1
+     * @return false if the squad size is too big, and true if not
+     */
     boolean addPlayerToTeam (Player player)
     {
         if (this.squad.size()>=this.maxSquadSize)
@@ -110,6 +115,11 @@ public class Team {
         return true;
     }
 
+    /**
+     * removes a specific player from the squad
+     * @param player 1
+     * @return true if the player can be removed, and false if not
+     */
     boolean removePlayerFromTeam(Player player)
     {
         if(this.squad.remove(player)) {
@@ -123,19 +133,31 @@ public class Team {
         }
     }
 
+    /**
+     * sells a player, and automatically, the budget is getting increased, and the player is gone
+     * @param player 1
+     * @param otherTeam 1
+     */
     void sellPlayerFromOtherTeam(Player player, Team otherTeam)
     {
         otherTeam.budget+=player.getMarketValue();
         otherTeam.squad.remove(player);
     }
 
+    /**
+     * transfers the player from "OTHER TEAM" to team , and automatically, the team that lost the player, gets the money for him, and the other one, loses the money.
+     * @param player 1
+     * @param otherTeam 1
+     * @return true if the transfer can be made, false if not
+     */
     boolean transferPlayerToTeam(Player player, Team otherTeam) //transfera un jucator de la other team, la team
     {
         if(this.squad.size()>=this.maxSquadSize) {
+            System.out.println("No more places in the squad");
             return false;
         }
         else if (this.budget<player.getMarketValue()) {
-            System.out.println("bugetul nu ajunge");
+            System.out.println("Budget is too low");
             return false;
         }
         else {
@@ -147,6 +169,9 @@ public class Team {
         }
     }
 
+    /**
+     * printing format for a team
+     */
     void printTeam()
     {
         System.out.println("Team - " + this.name + " | " + " Abreviation - " + this.abreviation + " | "+" Country -   " + this.country +" | " + " Town - " + this.town + " | " + " foundation year - " + this.foundationYear + " | " + " Squad Maximum Capacity - " + this.maxSquadSize + " | " + " Budget - " +this.budget + " Euro " );

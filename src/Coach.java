@@ -1,4 +1,4 @@
-import java.util.Date;
+
 
 public class Coach extends Person {
     private String playStyle;
@@ -15,10 +15,7 @@ public class Coach extends Person {
         return team;
     }
 
-//    public void setTeam(Team team) {
-//        this.team = team;
-//        this.status= " Training at " + " " + this.team.getName();
-//    }
+
 
     public String getPlayStyle() {
         return playStyle;
@@ -30,6 +27,11 @@ public class Coach extends Person {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    public void printCoach()
+    {
+        System.out.println("First Name : " + this.getFirstName() + " | " + " Last Name : " + this.getLastName() + " | " + " Age : " + this.getAge() + " Year Old " + " | " + " Nationality : " + this.getNationality() + " | " + "Play Style : " + this.getPlayStyle());
     }
 
 
