@@ -1,4 +1,6 @@
+package Model;
 
+import Model.Person;
 
 public class Player extends Person {
     public void setPosition(String position) {

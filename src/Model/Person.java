@@ -1,10 +1,11 @@
+package Model;
 
 public abstract class Person {
-    private final String firstName;
-    private final String lastName;
+    private String firstName;
+    private  String lastName;
 
-    private final String nationality;
-    private final int age;
+    private  String nationality;
+    private  int age;
 
     public Person(String firstName, String lastName, int age, String nationality) {
         this.firstName=firstName;
@@ -27,5 +28,21 @@ public abstract class Person {
 
     public int getAge() {
         return age;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }

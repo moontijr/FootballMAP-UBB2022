@@ -1,7 +1,11 @@
+package Model;
+
 import java.util.*;
 public class Sponsor {
     private String name;
     private int netWorth;
+
+    private String abreviation;
 
     public List <Team> sponsoredTeams=new ArrayList<>();
 
@@ -29,23 +33,38 @@ public class Sponsor {
         this.sponsoredTeams = sponsoredTeams;
     }
 
-    public Sponsor(String name, int netWorth) {
+    public Sponsor(String name,String abreviation, int netWorth) {
         this.name = name;
         this.netWorth = netWorth;
+        this.abreviation=abreviation;
     }
 
     public void sponsorTeam(Team team)
     {
         this.sponsoredTeams.add(team);
-        Sponsor sponsor=new Sponsor(this.name,this.netWorth);
+        Sponsor sponsor=new Sponsor(this.name, this.abreviation,this.netWorth);
         team.sponsors.add(sponsor);
     }
 
     public void stopSponsorTeam(Team team)
     {
-        Sponsor sponsor=new Sponsor(this.name,this.netWorth);
+        Sponsor sponsor=new Sponsor(this.name, this.abreviation,this.netWorth);
         this.sponsoredTeams.remove(team);
         team.sponsors.remove(sponsor);
+    }
+
+    public String getAbreviation() {
+        return abreviation;
+    }
+
+    public void setAbreviation(String abreviation) {
+        this.abreviation = abreviation;
+    }
+
+    public void disbandSponsor()
+    {
+        for(Team team: this.sponsoredTeams)
+            stopSponsorTeam(team);
     }
 
     public void printSponsor()

@@ -1,11 +1,25 @@
+package Model;
+
+import repository.inmemory.CoachRepositoryMemory;
+import repository.inmemory.PlayerRepositoryMemory;
+import repository.inmemory.SponsorRepositoryMemory;
+import repository.inmemory.TeamRepositoryMemory;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class Controller {
-    private Repository repository;
-    public Controller(Repository repository) {
-        this.repository=repository;
+    private PlayerRepositoryMemory playerRepositoryMemory;
+    private CoachRepositoryMemory coachRepositoryMemory;
+    private TeamRepositoryMemory teamRepositoryMemory;
+    private SponsorRepositoryMemory sponsorRepositoryMemory;
+
+    public Controller(PlayerRepositoryMemory playerRepositoryMemory, CoachRepositoryMemory coachRepositoryMemory, TeamRepositoryMemory teamRepositoryMemory, SponsorRepositoryMemory sponsorRepositoryMemory) {
+        this.playerRepositoryMemory = playerRepositoryMemory;
+        this.coachRepositoryMemory = coachRepositoryMemory;
+        this.teamRepositoryMemory = teamRepositoryMemory;
+        this.sponsorRepositoryMemory = sponsorRepositoryMemory;
     }
 
     /**
@@ -13,8 +27,8 @@ public class Controller {
      */
     public void sortAllPlayersByPrice ()
     {
-        repository.allPlayers.sort(Comparator.comparing(Player::getMarketValue));
-        for (Player player : repository.allPlayers) {
+        playerRepositoryMemory.getAllPlayers().sort(Comparator.comparing(Player::getMarketValue));
+        for (Player player : playerRepositoryMemory.getAllPlayers()) {
             player.printPlayer();
         }
     }
@@ -35,7 +49,7 @@ public class Controller {
      */
     public void printAllPlayers()
     {
-        for (Player player : repository.allPlayers) {
+        for (Player player : playerRepositoryMemory.getAllPlayers()) {
             player.printPlayer();
         }
     }
@@ -47,7 +61,7 @@ public class Controller {
     {
         List<Player> allPlayersFreeAgents=new ArrayList<>();
         List<Player> allPlayersNonFreeAgents=new ArrayList<>();
-        for (Player player : repository.allPlayers)
+        for (Player player : playerRepositoryMemory.getAllPlayers())
         {
             if(player.getStatus().contains("Free Agent"))
             {
@@ -73,8 +87,8 @@ public class Controller {
      */
     public void sortAllPlayersByAge()
     {
-        repository.allPlayers.sort(Comparator.comparing(Player::getAge));
-        for (Player player : repository.allPlayers) {
+        playerRepositoryMemory.getAllPlayers().sort(Comparator.comparing(Player::getAge));
+        for (Player player : playerRepositoryMemory.getAllPlayers()) {
             System.out.println(player.getFirstName() + " " +  player.getLastName() + " " + " | "+ "Age : " + player.getAge() + " Year Old ");
         }
 
@@ -87,7 +101,7 @@ public class Controller {
     public void sortAllPlayersByPosition (String position)
     {
         List<Player> allPlayersFromAPosition=new ArrayList<>();
-        for (Player player: repository.allPlayers)
+        for (Player player: playerRepositoryMemory.getAllPlayers())
             if(player.getPosition().contains(position))
                 allPlayersFromAPosition.add(player);
         if(allPlayersFromAPosition.size()>0) {
@@ -127,7 +141,7 @@ public class Controller {
     public void sortAllPlayersByNationality(String nationality)
     {
         List<Player> allPlayersFromANationality=new ArrayList<>();
-        for (Player player: repository.allPlayers)
+        for (Player player: playerRepositoryMemory.getAllPlayers())
             if(player.getNationality().contains(nationality))
                 allPlayersFromANationality.add(player);
         if(allPlayersFromANationality.size()>0) {
@@ -144,8 +158,8 @@ public class Controller {
      */
     public void sortAllPlayersByName()
     {
-        repository.allPlayers.sort(Comparator.comparing(Player::getFirstName));
-        for (Player player : repository.allPlayers) {
+        playerRepositoryMemory.getAllPlayers().sort(Comparator.comparing(Player::getFirstName));
+        for (Player player : playerRepositoryMemory.getAllPlayers()) {
             player.printPlayer();
         }
     }
@@ -155,7 +169,7 @@ public class Controller {
      */
     public void printAllTeams()
     {
-        for (Team team : repository.allTeams)
+        for (Team team : teamRepositoryMemory.getAllTeams())
             team.printTeam();
     }
 
@@ -164,8 +178,8 @@ public class Controller {
      */
     public void sortAllTeamsByBudget()
     {
-        repository.allTeams.sort(Comparator.comparing(Team::getBudget));
-        for (Team team : repository.allTeams )
+        teamRepositoryMemory.getAllTeams().sort(Comparator.comparing(Team::getBudget));
+        for (Team team : teamRepositoryMemory.getAllTeams() )
         {
             team.printTeam();
         }
@@ -177,8 +191,8 @@ public class Controller {
     public void sortAllTeamsByFoundationYear()
     {
 
-        repository.allTeams.sort(Comparator.comparing(Team::getFoundationYear));
-        for (Team team : repository.allTeams)
+        teamRepositoryMemory.getAllTeams().sort(Comparator.comparing(Team::getFoundationYear));
+        for (Team team : teamRepositoryMemory.getAllTeams())
         {
             team.printTeam();
         }
@@ -194,7 +208,7 @@ public class Controller {
 
     public boolean searchPlayerInDataBase(String name1, String name2)
     {
-        for(Player player:repository.allPlayers)
+        for(Player player:playerRepositoryMemory.getAllPlayers())
         {
             if(player.getFirstName().contains(name1) && player.getLastName().contains(name2))
                 return true;
@@ -210,7 +224,7 @@ public class Controller {
     public void seeAllOtherPlayersWithoutYourself(Player player)
     {
         List<Player> allPlayersWithoutYourself=new ArrayList<>();
-        for (Player player1 : repository.allPlayers)
+        for (Player player1 : playerRepositoryMemory.getAllPlayers())
         {
             if(!(player1.getLastName().contains(player.getLastName())&&player1.getFirstName().contains(player.getFirstName())))
                 allPlayersWithoutYourself.add(player1);
@@ -229,7 +243,7 @@ public class Controller {
     public void sortAllTeamsByCountry(String country)
     {
         List<Team> allTeamsFromACountry=new ArrayList<>();
-        for (Team team: repository.allTeams)
+        for (Team team: teamRepositoryMemory.getAllTeams())
             if(team.getCountry().contains(country))
                 allTeamsFromACountry.add(team);
         if(allTeamsFromACountry.size()>0) {
@@ -250,7 +264,7 @@ public class Controller {
     public void isAffordable(Player player)
     {
         List<Team> allPotentiallyTeams=new ArrayList<>();
-        for(Team team : repository.allTeams)
+        for(Team team : teamRepositoryMemory.getAllTeams())
         {
             if(team.getBudget()>=player.getMarketValue()&&team.getMaxSquadSize()>team.squad.size())
             {
@@ -322,7 +336,7 @@ public class Controller {
     public void listYourSquadAsACoach(Coach coach)
     {
         List<Player> allPlayers=new ArrayList<>();
-        for(Player player : repository.allPlayers)
+        for(Player player : playerRepositoryMemory.getAllPlayers())
         {
             if (player.getStatus().contains(coach.getTeam().getName()))
             {
@@ -343,7 +357,7 @@ public class Controller {
     public void listAllPlayersOutsideYourTeam(Coach coach)
     {
         List<Player> allPlayers=new ArrayList<>();
-        for(Player player : repository.allPlayers)
+        for(Player player : playerRepositoryMemory.getAllPlayers())
         {
             if (!(player.getStatus().contains(coach.getTeam().getName())))
             {
@@ -363,7 +377,7 @@ public class Controller {
     public void sortCoachTeamByValue(Coach coach)
     {
         List<Player> allPlayers=new ArrayList<>();
-        for(Player player : repository.allPlayers)
+        for(Player player : playerRepositoryMemory.getAllPlayers())
         {
             if (player.getStatus().contains(coach.getTeam().getName()))
             {
@@ -385,7 +399,7 @@ public class Controller {
     public void sortCoachTeamByAge(Coach coach)
     {
         List<Player> allPlayers=new ArrayList<>();
-        for(Player player : repository.allPlayers)
+        for(Player player : playerRepositoryMemory.getAllPlayers())
         {
             if (player.getStatus().contains(coach.getTeam().getName()))
             {
@@ -440,7 +454,7 @@ public class Controller {
      */
     public void printAllCoaches()
     {
-        for(Coach coach : repository.allCoaches)
+        for(Coach coach : coachRepositoryMemory.getAllCoaches())
         {
             coach.printCoach();
         }
@@ -451,8 +465,8 @@ public class Controller {
      */
     public void sortAllCoachesByAge()
     {
-        repository.allCoaches.sort(Comparator.comparing(Coach::getAge));
-        for (Coach coach : repository.allCoaches) {
+        coachRepositoryMemory.getAllCoaches().sort(Comparator.comparing(Coach::getAge));
+        for (Coach coach : coachRepositoryMemory.getAllCoaches()) {
             coach.printCoach();
         }
 
@@ -465,7 +479,7 @@ public class Controller {
     public void sortAllCoachessByNationality(String nationality)
     {
         List<Coach> allCoachesFromANationality=new ArrayList<>();
-        for (Coach coach: repository.allCoaches)
+        for (Coach coach: coachRepositoryMemory.getAllCoaches())
             if(coach.getNationality().contains(nationality))
                 allCoachesFromANationality.add(coach);
         if(allCoachesFromANationality.size()>0) {
@@ -483,8 +497,8 @@ public class Controller {
      */
     public void sortAllCoachesByName()
     {
-        repository.allCoaches.sort(Comparator.comparing(Coach::getFirstName));
-        for (Coach coach : repository.allCoaches) {
+        coachRepositoryMemory.getAllCoaches().sort(Comparator.comparing(Coach::getFirstName));
+        for (Coach coach : coachRepositoryMemory.getAllCoaches()) {
             coach.printCoach();
         }
     }
@@ -496,7 +510,7 @@ public class Controller {
     public void sortAllCoachessByPlayStyle(String playStyle)
     {
         List<Coach> allCoachesWithAPlaystyle=new ArrayList<>();
-        for (Coach coach: repository.allCoaches)
+        for (Coach coach: coachRepositoryMemory.getAllCoaches())
             if(coach.getPlayStyle().contains(playStyle))
                 allCoachesWithAPlaystyle.add(coach);
         if(allCoachesWithAPlaystyle.size()>0) {
@@ -514,7 +528,7 @@ public class Controller {
      */
     public void printAllSponsors()
     {
-        for ( Sponsor sponsor : repository.allSponsors)
+        for ( Sponsor sponsor : sponsorRepositoryMemory.getAllSponsors())
             sponsor.printSponsor();
     }
 
@@ -523,8 +537,8 @@ public class Controller {
      */
     public void sortAllSponsorsByName()
     {
-        repository.allSponsors.sort(Comparator.comparing(Sponsor::getName));
-        for (Sponsor sponsor : repository.allSponsors) {
+        sponsorRepositoryMemory.getAllSponsors().sort(Comparator.comparing(Sponsor::getName));
+        for (Sponsor sponsor : sponsorRepositoryMemory.getAllSponsors()) {
             sponsor.printSponsor();
         }
     }
@@ -534,8 +548,8 @@ public class Controller {
      */
     public void sortAllSponsorsByNetWorth()
     {
-        repository.allSponsors.sort(Comparator.comparing(Sponsor::getNetWorth));
-        for (Sponsor sponsor : repository.allSponsors) {
+        sponsorRepositoryMemory.getAllSponsors().sort(Comparator.comparing(Sponsor::getNetWorth));
+        for (Sponsor sponsor : sponsorRepositoryMemory.getAllSponsors()) {
             sponsor.printSponsor();
         }
     }
@@ -573,7 +587,7 @@ public class Controller {
     public void startSponsoring(Sponsor sponsor,String teamAbreviation)
     {
         Team team1;
-        for (Team team: repository.allTeams)
+        for (Team team: teamRepositoryMemory.getAllTeams())
             if (team.getAbreviation().contains(teamAbreviation)) {
                 team1 = team;
                 sponsor.sponsorTeam(team1);
@@ -590,7 +604,7 @@ public class Controller {
     public void endSponsoring(Sponsor sponsor,String teamAbreviation)
     {
         Team team1;
-        for (Team team: repository.allTeams)
+        for (Team team: teamRepositoryMemory.getAllTeams())
             if (team.getAbreviation().contains(teamAbreviation)) {
                 team1 = team;
                 sponsor.stopSponsorTeam(team1);
@@ -599,3 +613,7 @@ public class Controller {
     }
 
 }
+
+// THIS CONTROLLER WILL BE MOVED INTO SPECIFIC CONTROLLERS FOR EACH PLAYER/GUEST/SPONSOR/TEAM
+
+

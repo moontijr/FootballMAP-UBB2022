@@ -1,4 +1,4 @@
-
+package Model;
 
 public class Coach extends Person {
     private String playStyle;

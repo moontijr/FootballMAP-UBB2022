@@ -1,3 +1,7 @@
+package Model;
+
+import repository.inmemory.PlayerRepositoryMemory;
+
 import java.util.*;
 public class Team {
     private String name;
@@ -104,7 +108,7 @@ public class Team {
      * @param player 1
      * @return false if the squad size is too big, and true if not
      */
-    boolean addPlayerToTeam (Player player)
+    public boolean addPlayerToTeam (Player player)
     {
         if (this.squad.size()>=this.maxSquadSize)
             return false;
@@ -120,7 +124,7 @@ public class Team {
      * @param player 1
      * @return true if the player can be removed, and false if not
      */
-    boolean removePlayerFromTeam(Player player)
+    public boolean removePlayerFromTeam(Player player)
     {
         if(this.squad.remove(player)) {
             System.out.println("Player Removed");
@@ -138,7 +142,7 @@ public class Team {
      * @param player 1
      * @param otherTeam 1
      */
-    void sellPlayerFromOtherTeam(Player player, Team otherTeam)
+    public void sellPlayerFromOtherTeam(Player player, Team otherTeam)
     {
         otherTeam.budget+=player.getMarketValue();
         otherTeam.squad.remove(player);
@@ -150,7 +154,7 @@ public class Team {
      * @param otherTeam 1
      * @return true if the transfer can be made, false if not
      */
-    boolean transferPlayerToTeam(Player player, Team otherTeam) //transfera un jucator de la other team, la team
+    public boolean transferPlayerToTeam(Player player, Team otherTeam) //transfera un jucator de la other team, la team
     {
         if(this.squad.size()>=this.maxSquadSize) {
             System.out.println("No more places in the squad");
@@ -169,10 +173,18 @@ public class Team {
         }
     }
 
+    public void disbandTeam()
+    {
+        for(Player player : this.squad)
+            player.setStatus("Free Agent");
+        for(Sponsor sponsor:this.sponsors)
+            sponsor.stopSponsorTeam(this);
+    }
+
     /**
      * printing format for a team
      */
-    void printTeam()
+    public void printTeam()
     {
         System.out.println("Team - " + this.name + " | " + " Abreviation - " + this.abreviation + " | "+" Country -   " + this.country +" | " + " Town - " + this.town + " | " + " foundation year - " + this.foundationYear + " | " + " Squad Maximum Capacity - " + this.maxSquadSize + " | " + " Budget - " +this.budget + " Euro " );
     }
