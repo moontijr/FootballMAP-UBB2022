@@ -32,28 +32,34 @@ public class PlayerRepositoryMemory implements PlayerRepository {
 
     @Override
     public void add(Player entity) {
-        if(!this.existsPlayer(entity.getFirstName(), entity.getLastName()))
-            this.allPlayers.add(entity);
-        else
-            System.out.println("Player is already there");
+        //if(!this.existsPlayer(entity.getFirstName(), entity.getLastName()))
+        this.allPlayers.add(entity);
+        //else
+            //System.out.println("Player is already there");
     }
 
     @Override
     public void remove(String s, String s1) {
         if (findById(s,s1)!=null)
             this.allPlayers.remove(findById(s,s1));
-        else
-            System.out.println("Player was not found!");
+//        else
+//            System.out.println("Player was not found!");
     }
 
     @Override
     public void update(String s, String s1, Player newEntity) {
         if (findById(s, s1) != null) {
-            this.allPlayers.remove(findById(s,s1));
-            this.allPlayers.add(newEntity);
+            this.getPlayerFromFirstNameAndSecondName(s,s1).setFirstName(newEntity.getFirstName());
+            this.getPlayerFromFirstNameAndSecondName(s,s1).setLastName(newEntity.getLastName());
+            this.getPlayerFromFirstNameAndSecondName(s,s1).setAge(newEntity.getAge());
+            this.getPlayerFromFirstNameAndSecondName(s,s1).setNationality(newEntity.getNationality());
+            this.getPlayerFromFirstNameAndSecondName(s,s1).setPosition(newEntity.getPosition());
+            this.getPlayerFromFirstNameAndSecondName(s,s1).setMarketValue(newEntity.getMarketValue());
+//            this.allPlayers.remove(findById(s,s1));
+//            this.allPlayers.add(newEntity);
         }
-        else
-            System.out.println("Player was not found!");
+//        else
+//            System.out.println("Player was not found!");
     }
 
 

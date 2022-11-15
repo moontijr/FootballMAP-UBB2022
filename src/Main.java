@@ -1,4 +1,8 @@
 import Model.*;
+import controller.CoachController;
+import controller.PlayerController;
+import controller.SponsorController;
+import controller.TeamController;
 import repository.inmemory.CoachRepositoryMemory;
 import repository.inmemory.PlayerRepositoryMemory;
 import repository.inmemory.SponsorRepositoryMemory;
@@ -99,7 +103,13 @@ public class Main {
         Controller controller=new Controller(playerRepositoryMemory,coachRepositoryMemory,teamRepositoryMemory,sponsorRepositoryMemory);
 
         Scanner scanner=new Scanner(System.in);
-        UI ui = new UI(scanner,playerRepositoryMemory,sponsorRepositoryMemory,teamRepositoryMemory,coachRepositoryMemory,controller);
+        //UI ui = new UI(scanner,playerRepositoryMemory,sponsorRepositoryMemory,teamRepositoryMemory,coachRepositoryMemory,controller);
+        //ui.loginMenu();
+        PlayerController playerController = new PlayerController(playerRepositoryMemory,teamRepositoryMemory);
+        UI ui = new UI(scanner,playerRepositoryMemory,sponsorRepositoryMemory,teamRepositoryMemory,
+                coachRepositoryMemory,playerController,new TeamController(teamRepositoryMemory),
+                new CoachController(coachRepositoryMemory,playerRepositoryMemory),
+                new SponsorController(sponsorRepositoryMemory,teamRepositoryMemory));
         ui.startMenu();
     }
 }

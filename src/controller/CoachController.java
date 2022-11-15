@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class CoachController {
+public class  CoachController {
     private CoachRepositoryMemory coachRepositoryMemory;
     private PlayerRepositoryMemory playerRepositoryMemory;
 
@@ -22,9 +22,8 @@ public class CoachController {
 
     /**
      * lists all the players from the squad that a coach trains
-     * @param coach 1
      */
-    public void listYourSquadAsACoach(Coach coach)
+    public List<Player> listYourSquadAsACoach(Coach coach)
     {
         List<Player> allPlayers=new ArrayList<>();
         for(Player player : playerRepositoryMemory.getAllPlayers())
@@ -34,10 +33,16 @@ public class CoachController {
                 allPlayers.add(player);
             }
         }
+        /*
         for(Player player : allPlayers)
         {
             player.printPlayer();
         }
+         */
+        if(allPlayers.size()>0)
+            return allPlayers;
+        else
+            return null;
 
     }
 
@@ -45,7 +50,7 @@ public class CoachController {
      * lists all the players without the ones from the squad that the coach trains
      * @param coach 1
      */
-    public void listAllPlayersOutsideYourTeam(Coach coach)
+    public List<Player> listAllPlayersOutsideYourTeam(Coach coach)
     {
         List<Player> allPlayers=new ArrayList<>();
         for(Player player : playerRepositoryMemory.getAllPlayers())
@@ -55,17 +60,24 @@ public class CoachController {
                 allPlayers.add(player);
             }
         }
+
+        if(allPlayers.size()>0)
+            return allPlayers;
+        else
+            return null;
+        /*
         for(Player player : allPlayers)
         {
             player.printPlayer();
         }
+         */
     }
 
     /**
      * sorts the team that a coach trains (by the players value)
      * @param coach 1
      */
-    public void sortCoachTeamByValue(Coach coach)
+    public List <Player> sortCoachTeamByValue(Coach coach)
     {
         List<Player> allPlayers=new ArrayList<>();
         for(Player player : playerRepositoryMemory.getAllPlayers())
@@ -77,17 +89,23 @@ public class CoachController {
         }
         allPlayers.sort(Comparator.comparing(Player::getMarketValue));
 
+        if(allPlayers.size()>0)
+            return allPlayers;
+        else
+            return null;
+        /*
         for(Player player : allPlayers)
         {
             player.printPlayer();
         }
+         */
     }
 
     /**
      * sorts the team that a coaches train., by age
      * @param coach 1
      */
-    public void sortCoachTeamByAge(Coach coach)
+    public List <Player> sortCoachTeamByAge(Coach coach)
     {
         List<Player> allPlayers=new ArrayList<>();
         for(Player player : playerRepositoryMemory.getAllPlayers())
@@ -99,10 +117,16 @@ public class CoachController {
         }
         allPlayers.sort(Comparator.comparing(Player::getAge));
 
+        if(allPlayers.size()>0)
+            return allPlayers;
+        else
+            return null;
+        /*
         for(Player player : allPlayers)
         {
             player.printPlayer();
         }
+         */
 
     }
 
@@ -111,9 +135,10 @@ public class CoachController {
      * @param coach 1
      * @param player 1
      */
-    public void addPlayer(Coach coach,Player player)
+    public boolean addPlayer(Coach coach,Player player)
     {
-        coach.getTeam().addPlayerToTeam(player);
+        return coach.getTeam().addPlayerToTeam(player);
+
     }
 
     /**
@@ -122,9 +147,9 @@ public class CoachController {
      * @param player 1
      * @param team 1
      */
-    public void TransferPlayer(Coach coach, Player player, Team team)
+    public boolean transferPlayer(Coach coach, Player player, Team team)
     {
-        coach.getTeam().transferPlayerToTeam(player,team);
+        return coach.getTeam().transferPlayerToTeam(player,team);
     }
 
 
@@ -134,32 +159,46 @@ public class CoachController {
      * @param coach 1
      * @param player 1
      */
-    public void removePlayer(Coach coach,Player player)
+    public boolean removePlayer(Coach coach,Player player)
     {
         Team team=coach.getTeam();
-        team.removePlayerFromTeam(player);
+        return team.removePlayerFromTeam(player);
     }
 
     /**
      * prints all the coaches from our database
      */
-    public void printAllCoaches()
+    public List<Coach> printAllCoaches()
     {
+        List<Coach> coaches = new ArrayList<>(coachRepositoryMemory.getAllCoaches());
+        /*
         for(Coach coach : coachRepositoryMemory.getAllCoaches())
         {
             coach.printCoach();
         }
+         */
+        if(coaches.size()>0)
+            return coaches;
+        else
+            return null;
     }
 
     /**
      * sorts all our coaches from our database
      */
-    public void sortAllCoachesByAge()
+    public List <Coach> sortAllCoachesByAge()
     {
-        coachRepositoryMemory.getAllCoaches().sort(Comparator.comparing(Coach::getAge));
+        List<Coach> coaches = new ArrayList<>(coachRepositoryMemory.getAllCoaches());
+        coaches.sort(Comparator.comparing(Coach::getAge));
+        /*
         for (Coach coach : coachRepositoryMemory.getAllCoaches()) {
             coach.printCoach();
         }
+        */
+        if (coaches.size()>0)
+            return coaches;
+        else
+            return null;
 
     }
 
@@ -167,12 +206,13 @@ public class CoachController {
      * gives us a list of Coaches with a SPECIFIC NATIONALITY
      * @param nationality that we search for
      */
-    public void sortAllCoachessByNationality(String nationality)
+    public List <Coach> sortAllCoachessByNationality(String nationality)
     {
         List<Coach> allCoachesFromANationality=new ArrayList<>();
         for (Coach coach: coachRepositoryMemory.getAllCoaches())
             if(coach.getNationality().contains(nationality))
                 allCoachesFromANationality.add(coach);
+        /*
         if(allCoachesFromANationality.size()>0) {
             for (Coach coach : allCoachesFromANationality) {
                 coach.printCoach();
@@ -180,30 +220,44 @@ public class CoachController {
         }
         else {
             System.out.println("No coach from that country");
+
         }
+         */
+        if(allCoachesFromANationality.size()>0)
+            return allCoachesFromANationality;
+        else
+            return null;
     }
 
     /**
      * sorts all our coaches from the database by their name
      */
-    public void sortAllCoachesByName()
+    public List <Coach> sortAllCoachesByName()
     {
-        coachRepositoryMemory.getAllCoaches().sort(Comparator.comparing(Coach::getFirstName));
+        List<Coach> coaches = new ArrayList<>(coachRepositoryMemory.getAllCoaches());
+        coaches.sort(Comparator.comparing(Coach::getFirstName));
+        /*
         for (Coach coach : coachRepositoryMemory.getAllCoaches()) {
             coach.printCoach();
         }
+         */
+        if(coaches.size()>0)
+            return coaches;
+        else
+            return null;
     }
 
     /**
      * gives us a list of all our coaches by a SPECIFIC playstyle
      * @param playStyle that we search for
      */
-    public void sortAllCoachessByPlayStyle(String playStyle)
+    public List <Coach> sortAllCoachessByPlayStyle(String playStyle)
     {
         List<Coach> allCoachesWithAPlaystyle=new ArrayList<>();
         for (Coach coach: coachRepositoryMemory.getAllCoaches())
             if(coach.getPlayStyle().contains(playStyle))
                 allCoachesWithAPlaystyle.add(coach);
+        /*
         if(allCoachesWithAPlaystyle.size()>0) {
             for (Coach coach : allCoachesWithAPlaystyle) {
                 coach.printCoach();
@@ -212,6 +266,11 @@ public class CoachController {
         else {
             System.out.println("No coach with that playstyle");
         }
+         */
+        if(allCoachesWithAPlaystyle.size()>0)
+            return allCoachesWithAPlaystyle;
+        else
+            return null;
     }
 
 }

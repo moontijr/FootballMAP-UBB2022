@@ -588,7 +588,7 @@ public class Controller {
     {
         Team team1;
         for (Team team: teamRepositoryMemory.getAllTeams())
-            if (team.getAbreviation().contains(teamAbreviation)) {
+            if (team.getAbbreviation().contains(teamAbreviation)) {
                 team1 = team;
                 sponsor.sponsorTeam(team1);
                 break;
@@ -605,7 +605,7 @@ public class Controller {
     {
         Team team1;
         for (Team team: teamRepositoryMemory.getAllTeams())
-            if (team.getAbreviation().contains(teamAbreviation)) {
+            if (team.getAbbreviation().contains(teamAbreviation)) {
                 team1 = team;
                 sponsor.stopSponsorTeam(team1);
                 break;

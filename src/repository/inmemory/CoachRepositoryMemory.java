@@ -37,31 +37,35 @@ public class CoachRepositoryMemory implements CoachRepository {
 
     @Override
     public void add(Coach entity) {
-        if(!this.existsCoach(entity.getFirstName(), entity.getLastName()))
+//        if(!this.existsCoach(entity.getFirstName(), entity.getLastName()))
         this.allCoaches.add(entity);
-        else
-        {
-            System.out.println("Coach already exists");
-        }
+//        else
+//        {
+//            System.out.println("Coach already exists");
+//        }
 
     }
 
     @Override
     public void remove(String s, String id2) {
-        if (findById(s,id2)!=null)
+       // if (findById(s,id2)!=null)
             this.allCoaches.remove(findById(s,id2));
-        else
-            System.out.println("Coach was not found!");
+//        else
+//            System.out.println("Coach was not found!");
     }
 
     @Override
     public void update(String s, String id2, Coach newEntity) {
-        if (findById(s, id2) != null) {
-            this.allCoaches.remove(findById(s,id2));
-            this.allCoaches.add(newEntity);
-        }
-        else
-            System.out.println("Coach  was not found!");
+//        if (findById(s, id2) != null) {
+            this.findById(s,id2).setFirstName(newEntity.getFirstName());
+            this.findById(s,id2).setLastName(newEntity.getLastName());
+            this.findById(s,id2).setAge(newEntity.getAge());
+            this.findById(s,id2).setNationality(newEntity.getNationality());
+            this.findById(s,id2).setTeam(newEntity.getTeam());
+            this.findById(s,id2).setPlayStyle(newEntity.getPlayStyle());
+//        }
+//        else
+//            System.out.println("Coach  was not found!");
     }
 
     @Override

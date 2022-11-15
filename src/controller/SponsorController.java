@@ -5,7 +5,9 @@ import Model.Team;
 import repository.inmemory.SponsorRepositoryMemory;
 import repository.inmemory.TeamRepositoryMemory;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class SponsorController {
     private SponsorRepositoryMemory sponsorRepositoryMemory;
@@ -21,9 +23,15 @@ public class SponsorController {
      * @param sponsor 1
      * @param team 1
      */
-    public void startSponsorship(Sponsor sponsor, Team team)
+    public boolean startSponsorship(Sponsor sponsor, Team team)
     {
-        sponsor.sponsorTeam(team);
+
+        if(team.sponsors.contains(sponsor))
+            return false;
+        else {
+            sponsor.sponsorTeam(team);
+            return true;
+        }
     }
 
     /**
@@ -31,10 +39,16 @@ public class SponsorController {
      * @param sponsor 1
      * @param team 1
      */
-    public void endSponsorship(Sponsor sponsor, Team team)
+    public boolean endSponsorship(Sponsor sponsor, Team team)
     {
-        sponsor.sponsoredTeams.remove(team);
-        team.sponsors.remove(sponsor);
+        if(team.sponsors.contains(sponsor)) {
+            sponsor.stopSponsorTeam(team);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     public void printAllSponsors()
     {
@@ -45,48 +59,67 @@ public class SponsorController {
     /**
      * sorts all our sponsors from our database by their name
      */
-    public void sortAllSponsorsByName()
+    public List <Sponsor> sortAllSponsorsByName()
     {
-        sponsorRepositoryMemory.getAllSponsors().sort(Comparator.comparing(Sponsor::getName));
+        List <Sponsor> sponsors=sponsorRepositoryMemory.getAllSponsors();
+        sponsors.sort(Comparator.comparing(Sponsor::getName));
+        return sponsors;
+        /*
         for (Sponsor sponsor : sponsorRepositoryMemory.getAllSponsors()) {
             sponsor.printSponsor();
         }
+         */
     }
 
     /**
      * sorts all our sponsors from our database by their net worth
      */
-    public void sortAllSponsorsByNetWorth()
+    public List<Sponsor> sortAllSponsorsByNetWorth()
     {
+        List <Sponsor> sponsors=sponsorRepositoryMemory.getAllSponsors();
+        sponsors.sort(Comparator.comparing(Sponsor::getNetWorth));
+        return sponsors;
+        /*
         sponsorRepositoryMemory.getAllSponsors().sort(Comparator.comparing(Sponsor::getNetWorth));
         for (Sponsor sponsor : sponsorRepositoryMemory.getAllSponsors()) {
             sponsor.printSponsor();
         }
+
+         */
     }
 
     /**
      * gives us a list of all the teams, that the SPECIFIC sponsor is sponsoring
      * @param sponsor from many teams
      */
-    public void listAllTeamsFromASponsor(Sponsor sponsor)
+    //AICI AM RAMAS
+    public List <Team> listAllTeamsFromASponsor(Sponsor sponsor)
     {
-        for (Team team : sponsor.sponsoredTeams)
-        {
-            team.printTeam();
-        }
+        List<Team> teams = new ArrayList<>(sponsor.sponsoredTeams);
+        if(teams.size()>0)
+            return teams;
+        else
+            return null;
     }
 
     /**
      * sorts all the teams that are sponsored by a SPECIFIC sponsor
      * @param sponsor from many teams
      */
-    public void sortAllTeamsFromASponsorByMarketValue(Sponsor sponsor)
+    public List <Team> sortAllTeamsFromASponsorByMarketValue(Sponsor sponsor)
     {
-        sponsor.sponsoredTeams.sort(Comparator.comparing(Team::getBudget));
+        List <Team> teams=sponsor.sponsoredTeams;
+        teams.sort(Comparator.comparing(Team::getBudget));
+        /*
         for (Team team : sponsor.sponsoredTeams )
         {
             team.printTeam();
         }
+         */
+        if (teams.size()>0)
+            return teams;
+        else
+            return null;
     }
 
     /**
@@ -94,15 +127,16 @@ public class SponsorController {
      * @param sponsor sponsor
      * @param teamAbreviation string
      */
-    public void startSponsoring(Sponsor sponsor,String teamAbreviation)
+    public boolean startSponsoring(Sponsor sponsor,String teamAbreviation)
     {
         Team team1;
         for (Team team: teamRepositoryMemory.getAllTeams())
-            if (team.getAbreviation().contains(teamAbreviation)) {
+            if (team.getAbbreviation().contains(teamAbreviation)) {
                 team1 = team;
                 sponsor.sponsorTeam(team1);
-                break;
+                return true;
             }
+        return false;
 
     }
 
@@ -111,15 +145,16 @@ public class SponsorController {
      * @param sponsor sponsor
      * @param teamAbreviation string
      */
-    public void endSponsoring(Sponsor sponsor,String teamAbreviation)
+    public boolean endSponsoring(Sponsor sponsor,String teamAbreviation)
     {
         Team team1;
         for (Team team: teamRepositoryMemory.getAllTeams())
-            if (team.getAbreviation().contains(teamAbreviation)) {
+            if (team.getAbbreviation().contains(teamAbreviation)) {
                 team1 = team;
                 sponsor.stopSponsorTeam(team1);
-                break;
+                return true;
             }
+        return false;
     }
 
 }

@@ -23,7 +23,7 @@ public class PlayerController {
      */
     public List<Player> sortAllPlayersByPrice ()
     {
-        List<Player> allPlayers = (ArrayList<Player>) playerRepositoryMemory.getAllPlayers();
+        List<Player> allPlayers = playerRepositoryMemory.getAllPlayers();
         allPlayers.sort(Comparator.comparing(Player::getMarketValue));
         return allPlayers;
         //playerRepositoryMemory.getAllPlayers().sort(Comparator.comparing(Player::getMarketValue));
@@ -36,36 +36,60 @@ public class PlayerController {
      * sorts the squad list of a team (price)
      * @param team specific one
      */
-    public void sortPlayersFromSpecificTeamByPrice(Team team) {
-        team.squad.sort(Comparator.comparing(Player::getMarketValue));
+    public List<Player> sortPlayersFromSpecificTeamByPrice(Team team) {
+        List<Player> allPlayers = new ArrayList<>(team.squad);
+        allPlayers.sort(Comparator.comparing(Player::getMarketValue));
+        /*
         for (Player player : team.squad) {
             player.printPlayer();
         }
+         */
+        return allPlayers;
     }
 
     /**
      * prints all the players from our database
      */
-    public void printAllPlayers()
+    public List <Player> printAllPlayers()
     {
+        List <Player> players=playerRepositoryMemory.getAllPlayers();
+        /*
         for (Player player : playerRepositoryMemory.getAllPlayers()) {
             player.printPlayer();
         }
+         */
+        if(players.size()>0)
+            return players;
+        else
+            return null;
     }
 
     /**
      * prints 2 lists, one of them is with all the free agents, and the other one is with the players that currently play for a team
      */
-    public void sortPlayersByStatus()
+    public List<Player> sortPlayersByStatus(String string)
     {
-        List<Player> allPlayersFreeAgents=new ArrayList<>();
-        List<Player> allPlayersNonFreeAgents=new ArrayList<>();
-        for (Player player : playerRepositoryMemory.getAllPlayers())
-        {
-            if(player.getStatus().contains("Free Agent"))
-            {
-                allPlayersFreeAgents.add(player);
-            }
+        if(string.equals("Y") || string.equals("y")) {
+            List<Player> freeAgents = new ArrayList<>();
+            for (Player player : playerRepositoryMemory.getAllPlayers())
+                if(player.getStatus().contains("Free Agent"))
+                    freeAgents.add(player);
+            return freeAgents;
+        }else{
+            List<Player> playersWithContract = new ArrayList<>();
+            for (Player player : playerRepositoryMemory.getAllPlayers())
+                if(!player.getStatus().contains("Free Agent"))
+                    playersWithContract.add(player);
+            return playersWithContract;
+        }
+        //List<Player> allPlayers = new ArrayList<>();
+        //List<Player> allPlayersNonFreeAgents = new ArrayList<>();
+//        for (Player player : playerRepositoryMemory.getAllPlayers()) {
+//            if (player.getStatus().contains(string)) {
+//                allPlayers.add(player);
+//            }
+//        }
+            /*
             else
             {
                 allPlayersNonFreeAgents.add(player);
@@ -79,17 +103,28 @@ public class PlayerController {
         System.out.println("These are all the Non Free Agents Players - ");
         for(Player player : allPlayersNonFreeAgents)
             player.printPlayer();
+             */
+//        if (allPlayers.size() > 0)
+//            return allPlayers;
+//        else
+//            return null;
+
     }
 
     /**
      * sorts All the players from the database, by age
      */
-    public void sortAllPlayersByAge()
+    public List<Player> sortAllPlayersByAge()
     {
+        List<Player> allPlayers = playerRepositoryMemory.getAllPlayers();
+        allPlayers.sort(Comparator.comparing(Player::getAge));
+        return allPlayers;
+        /*
         playerRepositoryMemory.getAllPlayers().sort(Comparator.comparing(Player::getAge));
         for (Player player : playerRepositoryMemory.getAllPlayers()) {
             System.out.println(player.getFirstName() + " " +  player.getLastName() + " " + " | "+ "Age : " + player.getAge() + " Year Old ");
         }
+         */
 
     }
 
@@ -97,12 +132,18 @@ public class PlayerController {
      * gives us a list with all the players that have a specified position
      * @param position string
      */
-    public void sortAllPlayersByPosition (String position)
+    public List<Player> sortAllPlayersByPosition (String position)
     {
-        List<Player> allPlayersFromAPosition=new ArrayList<>();
-        for (Player player: playerRepositoryMemory.getAllPlayers())
-            if(player.getPosition().contains(position))
+        List<Player> allPlayersFromAPosition= new ArrayList<>();
+        for (Player player: playerRepositoryMemory.getAllPlayers()) {
+            if (player.getPosition().contains(position))
                 allPlayersFromAPosition.add(player);
+        }
+        if (allPlayersFromAPosition.size()>0)
+            return allPlayersFromAPosition;
+        else
+            return null;
+        /*
         if(allPlayersFromAPosition.size()>0) {
             for (Player player : allPlayersFromAPosition) {
                 System.out.println(player.getFirstName() + " " + player.getLastName() + " " + " | " + " Position  : " + player.getPosition() + "");
@@ -110,6 +151,7 @@ public class PlayerController {
         }
         else
             System.out.println("No player that match the position");
+         */
     }
 
     /**
@@ -117,12 +159,14 @@ public class PlayerController {
      * @param team that we want
      * @param position that we search for
      */
-    public void sortPlayersFromSpecificTeamByPosition (Team team, String position)
+    public List<Player> sortPlayersFromSpecificTeamByPosition (Team team, String position)
     {
-        List<Player> allPlayersFromAPosition=new ArrayList<>();
+        //List<Player> allPlayersFromTeam = new ArrayList<>(team.squad);
+        List<Player> allPlayersFromTeamByPosition=new ArrayList<>();
         for (Player player: team.squad)
             if(player.getPosition().contains(position))
-                allPlayersFromAPosition.add(player);
+                allPlayersFromTeamByPosition.add(player);
+        /*
         if(allPlayersFromAPosition.size()>0) {
             for (Player player : allPlayersFromAPosition) {
                 System.out.println(player.getFirstName() + " " + player.getLastName() + " " + " | " + " Position  : " + player.getPosition() + "");
@@ -130,6 +174,11 @@ public class PlayerController {
         }
         else
             System.out.println("No player that match the position in your squad");
+         */
+        if(allPlayersFromTeamByPosition.size()>0)
+            return allPlayersFromTeamByPosition;
+        else
+            return null;
     }
 
 
@@ -137,12 +186,12 @@ public class PlayerController {
      * prints a list with players with a specific nationality
      * @param nationality of a player
      */
-    public void sortAllPlayersByNationality(String nationality)
-    {
-        List<Player> allPlayersFromANationality=new ArrayList<>();
-        for (Player player: playerRepositoryMemory.getAllPlayers())
-            if(player.getNationality().contains(nationality))
+    public List<Player> sortAllPlayersByNationality(String nationality) {
+        List<Player> allPlayersFromANationality = new ArrayList<>();
+        for (Player player : playerRepositoryMemory.getAllPlayers())
+            if (player.getNationality().contains(nationality))
                 allPlayersFromANationality.add(player);
+        /*
         if(allPlayersFromANationality.size()>0) {
             for (Player player : allPlayersFromANationality) {
                 System.out.println(player.getFirstName() + " " + player.getLastName() + " " + " | " + "Nationality : " + player.getNationality() + "");
@@ -151,34 +200,51 @@ public class PlayerController {
         else
             System.out.println("No player from that country");
     }
+         */
+        if(allPlayersFromANationality.size()>0)
+            return allPlayersFromANationality;
+        else
+            return null;
+    }
 
     /**
      * sorts all the players by their family Name
      */
-    public void sortAllPlayersByName()
+    public List<Player> sortAllPlayersByName()
     {
+        List<Player> allPlayers = playerRepositoryMemory.getAllPlayers();
+        allPlayers.sort(Comparator.comparing(Player::getLastName));
+        return allPlayers;
+        /*
         playerRepositoryMemory.getAllPlayers().sort(Comparator.comparing(Player::getFirstName));
         for (Player player : playerRepositoryMemory.getAllPlayers()) {
             player.printPlayer();
         }
+         */
     }
 
     /**
      * prints all the players from the database, WITHOUT YOURSELF
      * @param player is yourself
      */
-    public void seeAllOtherPlayersWithoutYourself(Player player)
+    public List <Player> seeAllOtherPlayersWithoutYourself(Player player)
     {
         List<Player> allPlayersWithoutYourself=new ArrayList<>();
         for (Player player1 : playerRepositoryMemory.getAllPlayers())
         {
-            if(!(player1.getLastName().contains(player.getLastName())&&player1.getFirstName().contains(player.getFirstName())))
+            if(!(player1.getLastName().contains(player.getLastName())&&player.getFirstName().contains(player.getFirstName())))
                 allPlayersWithoutYourself.add(player1);
         }
+        /*
         for(Player player1 : allPlayersWithoutYourself)
         {
             player1.printPlayer();
         }
+         */
+        if(allPlayersWithoutYourself.size()>0)
+            return allPlayersWithoutYourself;
+        else
+            return null;
 
     }
 
@@ -186,7 +252,7 @@ public class PlayerController {
      * Shows the teams that can afford a specific player
      * @param player is the specific player
      */
-    public void isAffordable(Player player)
+    public List<Team> isAffordable(Player player)
     {
         List<Team> allPotentiallyTeams=new ArrayList<>();
         for(Team team : teamRepositoryMemory.getAllTeams())
@@ -198,13 +264,10 @@ public class PlayerController {
         }
         if(allPotentiallyTeams.size()>0)
         {
-            for (Team team : allPotentiallyTeams)
-            {
-                System.out.println("Team : " + team.getName());
-            }
+            return allPotentiallyTeams;
         }
         else
-            System.out.println("No Teams match your profile");
+            return null;
     }
 
 

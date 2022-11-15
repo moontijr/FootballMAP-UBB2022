@@ -5,7 +5,7 @@ public class Sponsor {
     private String name;
     private int netWorth;
 
-    private String abreviation;
+    private String abbreviation;
 
     public List <Team> sponsoredTeams=new ArrayList<>();
 
@@ -36,29 +36,27 @@ public class Sponsor {
     public Sponsor(String name,String abreviation, int netWorth) {
         this.name = name;
         this.netWorth = netWorth;
-        this.abreviation=abreviation;
+        this.abbreviation=abreviation;
     }
 
     public void sponsorTeam(Team team)
     {
         this.sponsoredTeams.add(team);
-        Sponsor sponsor=new Sponsor(this.name, this.abreviation,this.netWorth);
-        team.sponsors.add(sponsor);
+        team.sponsors.add(this);
     }
 
     public void stopSponsorTeam(Team team)
     {
-        Sponsor sponsor=new Sponsor(this.name, this.abreviation,this.netWorth);
         this.sponsoredTeams.remove(team);
-        team.sponsors.remove(sponsor);
+        team.sponsors.remove(this);
     }
 
-    public String getAbreviation() {
-        return abreviation;
+    public String getAbbreviation() {
+        return abbreviation;
     }
 
-    public void setAbreviation(String abreviation) {
-        this.abreviation = abreviation;
+    public void setAbbreviation(String abbreviation) {
+        this.abbreviation = abbreviation;
     }
 
     public void disbandSponsor()
