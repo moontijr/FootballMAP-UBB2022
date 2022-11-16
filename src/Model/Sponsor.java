@@ -1,13 +1,14 @@
 package Model;
 
 import java.util.*;
+
 public class Sponsor {
     private String name;
     private int netWorth;
 
     private String abbreviation;
 
-    public List <Team> sponsoredTeams=new ArrayList<>();
+    public List<Team> sponsoredTeams = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -33,20 +34,18 @@ public class Sponsor {
         this.sponsoredTeams = sponsoredTeams;
     }
 
-    public Sponsor(String name,String abreviation, int netWorth) {
+    public Sponsor(String name, String abbreviation, int netWorth) {
         this.name = name;
         this.netWorth = netWorth;
-        this.abbreviation=abreviation;
+        this.abbreviation = abbreviation;
     }
 
-    public void sponsorTeam(Team team)
-    {
+    public void sponsorTeam(Team team) {
         this.sponsoredTeams.add(team);
         team.sponsors.add(this);
     }
 
-    public void stopSponsorTeam(Team team)
-    {
+    public void stopSponsorTeam(Team team) {
         this.sponsoredTeams.remove(team);
         team.sponsors.remove(this);
     }
@@ -59,14 +58,12 @@ public class Sponsor {
         this.abbreviation = abbreviation;
     }
 
-    public void disbandSponsor()
-    {
-        for(Team team: this.sponsoredTeams)
+    public void disbandSponsor() {
+        for (Team team : this.sponsoredTeams)
             stopSponsorTeam(team);
     }
 
-    public void printSponsor()
-    {
+    public void printSponsor() {
         System.out.println("Name of The Sponsor : " + this.name + " | " + " Net Worth : " + this.netWorth + " Euro ");
     }
 

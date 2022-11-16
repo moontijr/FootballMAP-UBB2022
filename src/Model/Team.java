@@ -1,8 +1,7 @@
 package Model;
 
-import repository.inmemory.PlayerRepositoryMemory;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Team {
     private String name;
@@ -86,10 +85,6 @@ public class Team {
         return squad;
     }
 
-    public void setSquad(List<Player> squad) {
-        this.squad = squad;
-    }
-
     public List<Sponsor> getSponsors() {
         return sponsors;
     }
@@ -111,8 +106,7 @@ public class Team {
         this.squad = new ArrayList<>();
         this.sponsors = new ArrayList<>();
         this.budget = budget;
-        this.squadValue=0;
-
+        this.squadValue = 0;
     }
 
     /**
@@ -167,17 +161,14 @@ public class Team {
      * @param otherTeam 1
      * @return true if the transfer can be made, false if not
      */
-    public boolean transferPlayerToTeam(Player player, Team otherTeam) //transfera un jucator de la other team, la team
-    {
+    public boolean transferPlayerToTeam(Player player, Team otherTeam) {
         if (this.squad.contains(player))
             return false;
         if (!otherTeam.squad.contains(player))
             return false;
         if (this.squad.size() >= this.maxSquadSize) {
-            //System.out.println("No more places in the squad");
             return false;
         } else if (this.budget < player.getMarketValue()) {
-            //System.out.println("Budget is too low");
             return false;
         } else {
             this.budget -= player.getMarketValue();

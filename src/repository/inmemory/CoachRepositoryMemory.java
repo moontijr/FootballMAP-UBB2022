@@ -20,16 +20,9 @@ public class CoachRepositoryMemory implements CoachRepository {
     }
 
     private static void populate() {
-        CoachRepositoryMemory.getInstance().add(new Coach("Marius","Sumudica",58,"Romania", "Deffensive", new Team("Trial","TR","Romania","Medias",1999,40,28000)));
+        CoachRepositoryMemory.getInstance().add(new Coach("Marius", "Sumudica", 58, "Romania", "Defensive", new Team("Trial", "TR", "Romania", "Medias", 1999, 40, 28000)));
     }
 
-    public static CoachRepositoryMemory getSingle_instance() {
-        return single_instance;
-    }
-
-    public static void setSingle_instance(CoachRepositoryMemory single_instance) {
-        CoachRepositoryMemory.single_instance = single_instance;
-    }
 
     public ArrayList<Coach> getAllCoaches() {
         return allCoaches;
@@ -37,63 +30,38 @@ public class CoachRepositoryMemory implements CoachRepository {
 
     @Override
     public void add(Coach entity) {
-//        if(!this.existsCoach(entity.getFirstName(), entity.getLastName()))
         this.allCoaches.add(entity);
-//        else
-//        {
-//            System.out.println("Coach already exists");
-//        }
-
     }
 
     @Override
     public void remove(String s, String id2) {
-       // if (findById(s,id2)!=null)
-            this.allCoaches.remove(findById(s,id2));
-//        else
-//            System.out.println("Coach was not found!");
+        this.allCoaches.remove(findById(s, id2));
     }
 
     @Override
     public void update(String s, String id2, Coach newEntity) {
-//        if (findById(s, id2) != null) {
-            this.findById(s,id2).setFirstName(newEntity.getFirstName());
-            this.findById(s,id2).setLastName(newEntity.getLastName());
-            this.findById(s,id2).setAge(newEntity.getAge());
-            this.findById(s,id2).setNationality(newEntity.getNationality());
-            this.findById(s,id2).setTeam(newEntity.getTeam());
-            this.findById(s,id2).setPlayStyle(newEntity.getPlayStyle());
-//        }
-//        else
-//            System.out.println("Coach  was not found!");
+        this.findById(s, id2).setFirstName(newEntity.getFirstName());
+        this.findById(s, id2).setLastName(newEntity.getLastName());
+        this.findById(s, id2).setAge(newEntity.getAge());
+        this.findById(s, id2).setNationality(newEntity.getNationality());
+        this.findById(s, id2).setTeam(newEntity.getTeam());
+        this.findById(s, id2).setPlayStyle(newEntity.getPlayStyle());
     }
 
     @Override
     public Coach findById(String s, String id2) {
-        for(Coach coach: allCoaches)
-            if(s.equals(coach.getFirstName())&&id2.equals(coach.getLastName()))
+        for (Coach coach : allCoaches)
+            if (s.equals(coach.getFirstName()) && id2.equals(coach.getLastName()))
                 return coach;
         return null;
     }
 
-    public boolean existsCoach(String firstName, String secondName)
-    {
-        for(Coach coach: this.allCoaches)
-            if(coach.getFirstName().equals(firstName)&&coach.getLastName().equals(secondName))
+    public boolean existsCoach(String firstName, String secondName) {
+        for (Coach coach : this.allCoaches)
+            if (coach.getFirstName().equals(firstName) && coach.getLastName().equals(secondName))
                 return true;
         return false;
     }
 
-    public Coach getCoachFromFirstNameAndSecondName(String firstName, String secondName)
-    {
-        if(existsCoach(firstName,secondName))
-        {
-            for(Coach coach : this.allCoaches)
-                if(coach.getFirstName().equals(firstName)&&coach.getLastName().equals(secondName))
-                    return coach;
-        }
-        return null;
-
-    }
 
 }

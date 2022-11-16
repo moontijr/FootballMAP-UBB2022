@@ -1,43 +1,32 @@
 package view;
 
-import Model.*;
-import controller.PlayerController;
+import Model.Coach;
+import Model.Player;
+import Model.Sponsor;
+import Model.Team;
 import controller.CoachController;
-import controller.TeamController;
+import controller.PlayerController;
 import controller.SponsorController;
-import repository.TeamRepository;
+import controller.TeamController;
 import repository.inmemory.CoachRepositoryMemory;
 import repository.inmemory.PlayerRepositoryMemory;
 import repository.inmemory.SponsorRepositoryMemory;
 import repository.inmemory.TeamRepositoryMemory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class UI {
-    private Scanner userInput;
-    private PlayerRepositoryMemory playerRepositoryMemory;
-    private SponsorRepositoryMemory sponsorRepositoryMemory;
-    private TeamRepositoryMemory teamRepositoryMemory;
-    private CoachRepositoryMemory coachRepositoryMemory;
+    private final Scanner userInput;
+    private final PlayerRepositoryMemory playerRepositoryMemory;
+    private final SponsorRepositoryMemory sponsorRepositoryMemory;
+    private final TeamRepositoryMemory teamRepositoryMemory;
+    private final CoachRepositoryMemory coachRepositoryMemory;
 
-    //private Controller controller;
-
-    private PlayerController playerController;
-    private TeamController teamController;
-    private CoachController coachController;
-    private SponsorController sponsorController;
-
-//    public UI(Scanner scanner, PlayerRepositoryMemory playerRepositoryMemory, SponsorRepositoryMemory sponsorRepositoryMemory, TeamRepositoryMemory teamRepositoryMemory, CoachRepositoryMemory coachRepositoryMemory, Controller controller) {
-//        this.userInput = scanner;
-//        this.playerRepositoryMemory = playerRepositoryMemory;
-//        this.sponsorRepositoryMemory = sponsorRepositoryMemory;
-//        this.teamRepositoryMemory = teamRepositoryMemory;
-//        this.coachRepositoryMemory = coachRepositoryMemory;
-//        this.controller = controller;
-//    }
-
+    private final PlayerController playerController;
+    private final TeamController teamController;
+    private final CoachController coachController;
+    private final SponsorController sponsorController;
 
     public UI(Scanner userInput, PlayerRepositoryMemory playerRepositoryMemory, SponsorRepositoryMemory sponsorRepositoryMemory, TeamRepositoryMemory teamRepositoryMemory, CoachRepositoryMemory coachRepositoryMemory, PlayerController playerController, TeamController teamController, CoachController coachController, SponsorController sponsorController) {
         this.userInput = userInput;
@@ -50,8 +39,6 @@ public class UI {
         this.coachController = coachController;
         this.sponsorController = sponsorController;
     }
-
-    // private Scanner scanner = new Scanner(System.in);
 
 
     /***
@@ -188,7 +175,6 @@ public class UI {
                 String firstName = this.userInput.nextLine();
                 System.out.println("Last Name: ");
                 String lastName = this.userInput.nextLine();
-                //do we still need this if we have findByID in repo?
                 for (Player player : playerRepositoryMemory.getAllPlayers()) {
                     if (player.getFirstName().contains(firstName) && player.getLastName().contains(lastName))
                         subMenuPlayer(player);
@@ -222,15 +208,15 @@ public class UI {
         switch (choice2) {
             case 1:
                 List<Player> allOtherPlayers = playerController.seeAllOtherPlayersWithoutYourself(player);
-                if (allOtherPlayers.size() == 0)
+                if (allOtherPlayers == null)
                     System.out.println("There are no players");
-                for (Player otherPlayer : allOtherPlayers) {
-                    player.printPlayer();
-                }
+                else
+                    for (Player otherPlayer : allOtherPlayers) {
+                        otherPlayer.printPlayer();
+                    }
                 this.subMenuPlayer(player);
             case 2:
-                //show potential teams
-                List<Team> potentialTeams = new ArrayList<>();
+                List<Team> potentialTeams;
                 potentialTeams = playerController.isAffordable(player);
                 if (potentialTeams == null)
                     System.out.println("There are no teams");
@@ -239,7 +225,6 @@ public class UI {
                         team.printTeam();
                     }
                 }
-
                 this.subMenuPlayer(player);
             case 3:
                 this.startMenu();
@@ -288,7 +273,7 @@ public class UI {
                     if (team.getAbbreviation().contains(myTeam))
                         counter++;
                 if (counter == 0) {
-                    System.out.println("There is no team with such an abreviation in our database");
+                    System.out.println("There is no team with such an abbreviation in our database");
                     this.coachMenu();
                 } else {
                     Team newTeam = null;
@@ -320,8 +305,6 @@ public class UI {
                 }
                 System.out.println("There is no coach with that name, please try again with a different name");
                 this.coachMenu();
-                //search by name?
-                //this.subMenuCoach(newCoach);
             }
 
         }
@@ -355,49 +338,52 @@ public class UI {
         }
         switch (choice2) {
             case 1:
-                //see full squad
                 List<Player> myTeam = coachController.listYourSquadAsACoach(coach);
-                if (myTeam.size() == 0)
+                if (myTeam == null)
                     System.out.println("There are no players");
-                for (Player player : myTeam) {
-                    player.printPlayer();
+                else {
+                    for (Player player : myTeam) {
+                        player.printPlayer();
+                    }
                 }
                 this.subMenuCoach(coach);
                 break;
             case 2:
-                //see all other players
                 List<Player> otherPlayers = coachController.listAllPlayersOutsideYourTeam(coach);
-                ;
-                if (otherPlayers.size() == 0)
+                if (otherPlayers == null)
                     System.out.println("There are no players");
-                for (Player player : otherPlayers) {
-                    player.printPlayer();
+                else {
+                    for (Player player : otherPlayers) {
+                        player.printPlayer();
+                    }
                 }
                 this.subMenuCoach(coach);
                 break;
             case 3:
                 List<Player> myTeamSorted = playerController.sortPlayersFromSpecificTeamByPrice(coach.getTeam());
-                if (myTeamSorted.size() == 0)
+                if (myTeamSorted == null)
                     System.out.println("There are no players");
-                for (Player player : myTeamSorted) {
-                    player.printPlayer();
+                else {
+                    for (Player player : myTeamSorted) {
+                        player.printPlayer();
+                    }
                 }
                 this.subMenuCoach(coach);
                 break;
             case 4:
-                //sort players by position
                 System.out.println("Please choose a position");
-                String inputString1 = userInput.nextLine();
-                List<Player> myTeamSpecificPosition = playerController.sortPlayersFromSpecificTeamByPosition(coach.getTeam(), inputString1);
-                if (myTeamSpecificPosition.size() == 0)
+                String position = userInput.nextLine();
+                List<Player> myTeamSpecificPosition = playerController.sortPlayersFromSpecificTeamByPosition(coach.getTeam(), position);
+                if (myTeamSpecificPosition == null)
                     System.out.println("There are no players");
-                for (Player player : myTeamSpecificPosition) {
-                    player.printPlayer();
+                else {
+                    for (Player player : myTeamSpecificPosition) {
+                        player.printPlayer();
+                    }
                 }
                 this.subMenuCoach(coach);
                 break;
             case 5:
-                //sign a player
                 Player player1 = null;
                 Team team1 = null;
                 System.out.println("Tell us the details of the followed player:");
@@ -416,29 +402,18 @@ public class UI {
                         team1 = team;
                 if (coach.getTeam().getSquad().size() >= coach.getTeam().getMaxSquadSize()) {
                     System.out.println("No more places in the squad");
-                } else if (coach.getTeam().getBudget() < player1.getMarketValue()) {
-                    System.out.println("Budget is too low");
+                } else {
+                    assert player1 != null;
+                    if (coach.getTeam().getBudget() < player1.getMarketValue()) {
+                        System.out.println("Budget is too low");
+                    }
                 }
                 coach.getTeam().transferPlayerToTeam(player1, team1);
-
-
-//                System.out.println("Age: ");
-//                int age = this.userInput.nextInt();
-//                System.out.println("Nationality: ");
-//                String nationality = this.userInput.nextLine();
-//                System.out.println("Position: ");
-//                String position = this.userInput.nextLine();
-//                System.out.println("Market value: ");
-//                int marketValue = this.userInput.nextInt();
-                //search the player
-                //add to the team
-
                 this.subMenuCoach(coach);
                 break;
 
             case 6:
                 Player player2 = null;
-                Team team2 = null;
                 System.out.println("Tell us the details of the followed player:");
                 this.userInput.nextLine();
                 System.out.println("First Name: ");
@@ -459,7 +434,6 @@ public class UI {
                 String firstName3 = this.userInput.nextLine();
                 System.out.println("Last Name: ");
                 String lastName3 = this.userInput.nextLine();
-
                 Player player3 = null;
                 for (Player player : playerRepositoryMemory.getAllPlayers())
                     if (player.getFirstName().contains(firstName3) && player.getLastName().contains(lastName3))
@@ -469,19 +443,6 @@ public class UI {
                 } else {
                     System.out.println("Player wasn't in the squad");
                 }
-                ;
-//                System.out.println("Age: ");
-//                int age2 = this.userInput.nextInt();
-//                System.out.println("Nationality: ");
-//                String nationality2 = this.userInput.nextLine();
-//                System.out.println("Position: ");
-//                String position2 = this.userInput.nextLine();
-//                System.out.println("Market value: ");
-//                int marketValue2 = this.userInput.nextInt();
-
-                //search the player
-                //removes from squad
-                //change player status
                 this.subMenuCoach(coach);
                 break;
             case 8:
@@ -532,8 +493,6 @@ public class UI {
                 for (Sponsor sponsor1 : sponsorRepositoryMemory.getAllSponsors())
                     if (sponsor1.getName().contains(nameOfTheFirm))
                         subMenuSponsor(sponsor1);
-                //search sponsor
-                //this.subMenuSponsor(newSponsor);
                 break;
         }
     }
@@ -563,7 +522,7 @@ public class UI {
         switch (choice) {
             case 1:
                 List<Team> sameSponsorTeams = sponsorController.listAllTeamsFromASponsor(sponsor);
-                if (sameSponsorTeams.size() == 0)
+                if (sameSponsorTeams == null)
                     System.out.println("There are no sponsors");
                 else {
                     for (Team team : sameSponsorTeams)
@@ -573,7 +532,7 @@ public class UI {
                 break;
             case 2:
                 List<Team> sameSponsorTeamsSortedByValue = sponsorController.sortAllTeamsFromASponsorByMarketValue(sponsor);
-                if (sameSponsorTeamsSortedByValue.size() == 0)
+                if (sameSponsorTeamsSortedByValue == null)
                     System.out.println("There are no sponsors");
                 else {
                     for (Team team : sameSponsorTeamsSortedByValue)
@@ -581,22 +540,19 @@ public class UI {
                 }
                 this.subMenuSponsor(sponsor);
             case 3:
-                //start sponsoring a team
-                System.out.println("Please type the abreviation from the team you wish to sponsor");
+                System.out.println("Please type the abbreviation from the team you wish to sponsor");
                 String inputString = userInput.nextLine();
                 sponsorController.startSponsoring(sponsor, inputString);
                 this.subMenuSponsor(sponsor);
                 break;
             case 4:
-                //end a sponsorship
-                System.out.println("Please type the abreviation from the team you wish to stop sponsoring");
+                System.out.println("Please type the abbreviation from the team you wish to stop sponsoring");
                 String inputString1 = userInput.nextLine();
                 sponsorController.endSponsoring(sponsor, inputString1);
                 this.subMenuSponsor(sponsor);
             case 5:
-                //sort sponsored teams
                 List<Team> sponsoredTeams = teamController.sortSponsoredTeamsByBudget(sponsor);
-                if (sponsoredTeams.size() == 0)
+                if (sponsoredTeams == null)
                     System.out.println("There are no teams.");
                 else {
                     for (Team team : sponsoredTeams)
@@ -685,31 +641,36 @@ public class UI {
         switch (choice) {
             case 1:
                 List<Player> allPlayers = playerController.printAllPlayers();
-                if (allPlayers.size() == 0)
+                if (allPlayers == null)
                     System.out.println("There are no players\n");
-                for (Player player : allPlayers) {
-                    player.printPlayer();
+                else {
+                    for (Player player : allPlayers) {
+                        player.printPlayer();
+                    }
                 }
                 this.playerDBMenu();
                 break;
             case 2:
                 List<Player> sortedPlayers = playerController.sortAllPlayersByPrice();
-                if (sortedPlayers.size() == 0)
+                if (sortedPlayers == null)
                     System.out.println("There are no players\n");
-                for (Player player : sortedPlayers) {
-                    player.printPlayer();
+                else {
+                    for (Player player : sortedPlayers) {
+                        player.printPlayer();
+                    }
                 }
                 this.playerDBMenu();
                 break;
             case 3:
-                //sort by position
                 System.out.println("Please choose a position");
                 String inputString1 = userInput.nextLine();
                 List<Player> playersWithSelectedPosition = playerController.sortAllPlayersByPosition(inputString1);
-                if (playersWithSelectedPosition.size() == 0)
+                if (playersWithSelectedPosition == null)
                     System.out.println("There are no players\n");
-                for (Player player : playersWithSelectedPosition) {
-                    player.printPlayer();
+                else {
+                    for (Player player : playersWithSelectedPosition) {
+                        player.printPlayer();
+                    }
                 }
                 this.playerDBMenu();
                 break;
@@ -717,41 +678,47 @@ public class UI {
                 System.out.println("Do you want to see the free agents?\n (Y/y, else, we will list players that have a team");
                 String answer = this.userInput.nextLine();
                 List<Player> statusPlayers = playerController.sortPlayersByStatus(answer);
-                if (statusPlayers.size() == 0)
+                if (statusPlayers == null)
                     System.out.println("There are no players\n");
-                for (Player player : statusPlayers) {
-                    player.printPlayer();
+                else {
+                    for (Player player : statusPlayers) {
+                        player.printPlayer();
+                    }
                 }
                 this.playerDBMenu();
-                //sort by status
                 break;
             case 5:
                 List<Player> playersByAge = playerController.sortAllPlayersByAge();
-                if (playersByAge.size() == 0)
+                if (playersByAge == null)
                     System.out.println("There are no players\n");
-                for (Player player : playersByAge) {
-                    player.printPlayer();
+                else {
+                    for (Player player : playersByAge) {
+                        player.printPlayer();
+                    }
                 }
                 this.playerDBMenu();
-                //by age
                 break;
             case 6:
                 System.out.println("Please choose a nationality");
                 String inputString = userInput.nextLine();
                 List<Player> specificCountry = playerController.sortAllPlayersByNationality(inputString);
-                if (specificCountry.size() == 0)
+                if (specificCountry == null)
                     System.out.println("There are no players");
-                for (Player player : specificCountry) {
-                    player.printPlayer();
+                else {
+                    for (Player player : specificCountry) {
+                        player.printPlayer();
+                    }
                 }
                 this.playerDBMenu();
                 break;
             case 7:
                 List<Player> sortedByName = playerController.sortAllPlayersByName();
-                if (sortedByName.size() == 0)
+                if (sortedByName == null)
                     System.out.println("There are no players");
-                for (Player player : sortedByName) {
-                    player.printPlayer();
+                else {
+                    for (Player player : sortedByName) {
+                        player.printPlayer();
+                    }
                 }
                 this.playerDBMenu();
                 break;
@@ -789,33 +756,30 @@ public class UI {
         switch (choice) {
             case 1:
                 List<Coach> allCoaches = coachController.printAllCoaches();
-                if (allCoaches.size() == 0)
+                if (allCoaches == null)
                     System.out.println("There are no coaches");
                 else {
                     for (Coach coach : allCoaches)
                         coach.printCoach();
                 }
                 this.coachDBMenu();
-                //list all coaches
                 break;
             case 2:
                 this.dataBasesMenu();
                 System.out.println("Please choose the playing style of the coaches you want to see");
                 String playstyle = userInput.nextLine();
-                List<Coach> allCoachesSortedByPlaystyle = coachController.sortAllCoachessByPlayStyle(playstyle);
-                if (allCoachesSortedByPlaystyle.size() == 0)
+                List<Coach> allCoachesSortedByPlaystyle = coachController.sortAllCoachesByPlayStyle(playstyle);
+                if (allCoachesSortedByPlaystyle == null)
                     System.out.println("There are no coaches");
                 else {
                     for (Coach coach : allCoachesSortedByPlaystyle)
                         coach.printCoach();
                 }
-                //sort by playing style
                 this.coachDBMenu();
                 break;
             case 3:
-                //sort by age
                 List<Coach> allCoachesSortedByAge = coachController.sortAllCoachesByAge();
-                if (allCoachesSortedByAge.size() == 0)
+                if (allCoachesSortedByAge == null)
                     System.out.println("There are no coaches");
                 else {
                     for (Coach coach : allCoachesSortedByAge)
@@ -824,14 +788,12 @@ public class UI {
                 this.coachDBMenu();
                 break;
             case 4:
-                //sort by status
                 this.coachDBMenu();
             case 5:
-                //sort by nationality
                 System.out.println("Please choose a nationality");
                 String country = userInput.nextLine();
-                List<Coach> allCoachesSortedByNationality = coachController.sortAllCoachessByNationality(country);
-                if (allCoachesSortedByNationality.size() == 0)
+                List<Coach> allCoachesSortedByNationality = coachController.sortAllCoachesByNationality(country);
+                if (allCoachesSortedByNationality == null)
                     System.out.println("There are no coaches");
                 else {
                     for (Coach coach : allCoachesSortedByNationality)
@@ -840,9 +802,8 @@ public class UI {
                 this.coachDBMenu();
                 break;
             case 6:
-                //sort by name
                 List<Coach> allCoachesSortedByName = coachController.sortAllCoachesByName();
-                if (allCoachesSortedByName.size() == 0)
+                if (allCoachesSortedByName == null)
                     System.out.println("There are no coaches");
                 else {
                     for (Coach coach : allCoachesSortedByName)
@@ -851,7 +812,6 @@ public class UI {
                 this.coachDBMenu();
                 break;
             case 7:
-                //
                 this.dataBasesMenu();
             case 8:
                 System.exit(0);
@@ -886,21 +846,18 @@ public class UI {
             case 1:
                 teamController.printAllTeams();
                 this.teamsDBMenu();
-                //list all teams
                 break;
             case 2:
                 this.teamsDBMenu();
-                //sort by market value
                 break;
             case 3:
-                //sort by name
                 this.teamsDBMenu();
                 break;
             case 4:
                 System.out.println("Please choose the country ");
                 String country = userInput.nextLine();
                 List<Team> teamsFromCountry = teamController.sortAllTeamsByCountry(country);
-                if (teamsFromCountry.size() == 0)
+                if (teamsFromCountry == null)
                     System.out.println("There are no teams from this country");
                 else
                     for (Team team : teamsFromCountry)
@@ -909,7 +866,7 @@ public class UI {
                 break;
             case 5:
                 List<Team> sortedByYear = teamController.sortAllTeamsByFoundationYear();
-                if (sortedByYear.size() == 0)
+                if (sortedByYear == null)
                     System.out.println("There are no teams");
                 else {
                     for (Team team : sortedByYear)
@@ -919,7 +876,7 @@ public class UI {
                 break;
             case 6:
                 List<Team> sortedByBudget = teamController.sortAllTeamsByBudget();
-                if (sortedByBudget.size() == 0)
+                if (sortedByBudget == null)
                     System.out.println("There are no teams");
                 else {
                     for (Team team : sortedByBudget)
@@ -961,11 +918,10 @@ public class UI {
             case 1:
                 sponsorController.printAllSponsors();
                 this.sponsorDBMenu();
-                //list all sponsors
                 break;
             case 2:
                 List<Sponsor> sponsorsSortedByName = sponsorController.sortAllSponsorsByName();
-                if (sponsorsSortedByName.size() == 0)
+                if (sponsorsSortedByName == null)
                     System.out.println("There are no sponsors");
                 else {
                     for (Sponsor sponsor : sponsorsSortedByName)
@@ -975,7 +931,7 @@ public class UI {
                 break;
             case 3:
                 List<Sponsor> sponsorsSortedByNetworth = sponsorController.sortAllSponsorsByNetWorth();
-                if (sponsorsSortedByNetworth.size() == 0)
+                if (sponsorsSortedByNetworth == null)
                     System.out.println("There are no sponsors");
                 else {
                     for (Sponsor sponsor : sponsorsSortedByNetworth)
@@ -998,11 +954,9 @@ public class UI {
                 this.sponsorDBMenu();
                 break;
             case 5:
-                //all sponsors from a team(we give a team as a parameter)
                 this.sponsorDBMenu();
                 break;
             case 6:
-                //go back
                 this.dataBasesMenu();
             case 7:
                 System.exit(0);
@@ -1110,7 +1064,7 @@ public class UI {
                 System.out.println("Last Name: ");
                 String lastName = this.userInput.nextLine();
                 if (playerRepositoryMemory.existsPlayer(firstName, lastName))
-                    playerRepositoryMemory.getPlayerFromFirstNameAndSecondName(firstName, lastName).printPlayer();
+                    playerRepositoryMemory.findById(firstName, lastName).printPlayer();
                 else {
                     System.out.println("Player does not exist");
                 }
@@ -1128,6 +1082,7 @@ public class UI {
                     System.out.println("""
                             Please enter the new details:
                             (You don't have to change everything)
+                            Press ENTER to start
                             """);
                     this.userInput.nextLine();
                     System.out.println("First Name: ");
@@ -1144,14 +1099,9 @@ public class UI {
                     System.out.println("Market value: ");
                     int newMarketValue = this.userInput.nextInt();
                     Player updatedPlayer = new Player(newFirstName, newLastName, newAge, newNationality, newPosition, newMarketValue);
-                    //repo.update(firstName,lastName,updatedPlayer)
                     playerRepositoryMemory.update(firstName, lastName, updatedPlayer);
-                } else {
+                } else
                     System.out.println("Player does not exist");
-                }
-                // return true and print all details of the player
-                // else move to case 1 to register it?
-
                 this.adminPlayerDBMenu();
             }
             case 4 -> {
@@ -1218,11 +1168,10 @@ public class UI {
                     if (team.getAbbreviation().contains(myTeam))
                         counter++;
                 if (counter == 0) {
-                    System.out.println("There is no team with such an abreviation in our database");
+                    System.out.println("There is no team with such an abbreviation in our database");
                     this.adminCoachDBMenu();
                 } else {
                     Team newTeam = null;
-                    //search the team, break the loop if the team is not found
                     for (Team team : teamRepositoryMemory.getAllTeams())
                         if (team.getAbbreviation().contains(myTeam))
                             newTeam = team;
@@ -1244,11 +1193,10 @@ public class UI {
                 System.out.println("Last Name: ");
                 String lastName = this.userInput.nextLine();
                 if (coachRepositoryMemory.existsCoach(firstName, lastName))
-                    coachRepositoryMemory.getCoachFromFirstNameAndSecondName(firstName, lastName).printCoach();
+                    coachRepositoryMemory.findById(firstName, lastName).printCoach();
                 else {
                     System.out.println("Coach does not exist");
                 }
-                //case 1 if not found?
                 this.adminCoachDBMenu();
             }
             case 3 -> {
@@ -1258,43 +1206,41 @@ public class UI {
                 String firstName = this.userInput.nextLine();
                 System.out.println("Last Name: ");
                 String lastName = this.userInput.nextLine();
-                //findByID(firstName,lastName)
-                System.out.println("Tell us the new details:");
-                this.userInput.nextLine();
-                System.out.println("First Name: ");
-                String newFirstName = this.userInput.nextLine();
-                System.out.println("Last Name: ");
-                String newLastName = this.userInput.nextLine();
-                System.out.println("Age: ");
-                int age = this.userInput.nextInt();
-                this.userInput.nextLine();
-                System.out.println("Nationality: ");
-                String nationality = this.userInput.nextLine();
-                System.out.println("Playstyle: ");
-                String playstyle = this.userInput.nextLine();
-                System.out.println("Your current team: ");
-                String myTeam = this.userInput.nextLine();
-                int counter = 0;
-                for (Team team : teamRepositoryMemory.getAllTeams())
-                    if (team.getAbbreviation().contains(myTeam))
-                        counter++;
-                if (counter == 0) {
-                    System.out.println("There is no team with such an abreviation in our database");
-                    this.adminCoachDBMenu();
-                } else {
-                    Team newTeam = null;
-                    //search the team, break the loop if the team is not found
+                if (coachRepositoryMemory.findById(firstName, lastName) != null) {
+                    System.out.println("Tell us the new details:");
+                    this.userInput.nextLine();
+                    System.out.println("First Name: ");
+                    String newFirstName = this.userInput.nextLine();
+                    System.out.println("Last Name: ");
+                    String newLastName = this.userInput.nextLine();
+                    System.out.println("Age: ");
+                    int age = this.userInput.nextInt();
+                    this.userInput.nextLine();
+                    System.out.println("Nationality: ");
+                    String nationality = this.userInput.nextLine();
+                    System.out.println("Playstyle: ");
+                    String playstyle = this.userInput.nextLine();
+                    System.out.println("Your current team: ");
+                    String myTeam = this.userInput.nextLine();
+                    int counter = 0;
                     for (Team team : teamRepositoryMemory.getAllTeams())
                         if (team.getAbbreviation().contains(myTeam))
-                            newTeam = team;
+                            counter++;
+                    if (counter == 0) {
+                        System.out.println("There is no team with such an abbreviation in our database");
+                        this.adminCoachDBMenu();
+                    } else {
+                        Team newTeam = null;
+                        for (Team team : teamRepositoryMemory.getAllTeams())
+                            if (team.getAbbreviation().contains(myTeam))
+                                newTeam = team;
 
-                    Coach newCoach = new Coach(newFirstName, newLastName, age, nationality, playstyle, newTeam);
-                    if (coachRepositoryMemory.findById(firstName, lastName) != null)
+                        Coach newCoach = new Coach(newFirstName, newLastName, age, nationality, playstyle, newTeam);
                         coachRepositoryMemory.update(firstName, lastName, newCoach);
-                    else
-                        System.out.println("Coach  was not found!");
-                    //repo.update
-                }
+                    }
+                } else
+                    System.out.println("Coach was not found!");
+                this.adminCoachDBMenu();
             }
             case 4 -> {
                 System.out.println("Tell us his name:");
@@ -1307,8 +1253,6 @@ public class UI {
                     this.coachRepositoryMemory.remove(firstName, lastName);
                 else
                     System.out.println("Coach was not found!");
-                //findByID(firstName,lastName)
-                //remove(firstName,lastName)
                 this.adminCoachDBMenu();
             }
             case 5 -> adminDBsMenu();
@@ -1322,10 +1266,9 @@ public class UI {
                 1. Create teams
                 2. Search teams
                 3. Update teams
-                4. Delete teams 
+                4. Delete teams
                 5. Go back
-                6. Exit
-                 """);
+                6. Exit""");
         int choice = this.userInput.nextInt();
         boolean validator = false;
 
@@ -1345,8 +1288,6 @@ public class UI {
                 String name = this.userInput.nextLine();
                 System.out.println("Team abbreviation: ");
                 String abbreviation = this.userInput.nextLine();
-                //dictionarul din intelliJ mi-a scos in evidenta faptul ca abbreviation e cu 2 'b'
-                //am modifcat in constructor si in UI, in rest, mie nu mi-au aparut erori
                 System.out.println("Country: ");
                 String country = this.userInput.nextLine();
                 System.out.println("Town: ");
@@ -1361,7 +1302,7 @@ public class UI {
                 int budget = this.userInput.nextInt();
                 this.userInput.nextLine();
                 Team newTeam = new Team(name, abbreviation, country, town, foundationYear, maxSquadSize, budget);
-                if (!this.teamRepositoryMemory.existsTeam(newTeam.getName(), newTeam.getAbbreviation()))
+                if (this.teamRepositoryMemory.findById(newTeam.getName(), newTeam.getAbbreviation()) == null)
                     this.teamRepositoryMemory.add(newTeam);
                 else
                     System.out.println("Team already exists");
@@ -1374,7 +1315,10 @@ public class UI {
                 String name = this.userInput.nextLine();
                 System.out.println("Abbreviation: ");
                 String abbreviation = this.userInput.nextLine();
-                //findByID(name,abbreviation)
+                if (teamRepositoryMemory.findById(name, abbreviation) != null)
+                    teamRepositoryMemory.findById(name, abbreviation).printTeam();
+                else
+                    System.out.println("This team does not exist!");
                 this.adminTeamsDBMenu();
             }
             case 3 -> {
@@ -1384,7 +1328,6 @@ public class UI {
                 String name = this.userInput.nextLine();
                 System.out.println("Abbreviation: ");
                 String abbreviation = this.userInput.nextLine();
-                //findByID(name,abbreviation)
                 if (teamRepositoryMemory.findById(name, abbreviation) != null) {
                     System.out.println("Please tell us the new details of the team: ");
                     System.out.println("(You don't have to change everything)");
@@ -1411,9 +1354,6 @@ public class UI {
                 } else {
                     System.out.println("Team  was not found!");
                 }
-
-
-                //crud.update(updatedTeam)
                 this.adminTeamsDBMenu();
             }
             case 4 -> {
@@ -1423,9 +1363,10 @@ public class UI {
                 String name = this.userInput.nextLine();
                 System.out.println("Abbreviation: ");
                 String abbreviation = this.userInput.nextLine();
-                if (teamRepositoryMemory.findById(name, abbreviation) != null)
+                if (teamRepositoryMemory.findById(name, abbreviation) != null) {
                     teamRepositoryMemory.remove(name, abbreviation);
-                else
+                    teamRepositoryMemory.findById(name, abbreviation).disbandTeam();
+                } else
                     System.out.println("Team was not found!");
                 this.adminTeamsDBMenu();
             }
@@ -1461,12 +1402,15 @@ public class UI {
                 this.userInput.nextLine();
                 System.out.println("Name: ");
                 String name = this.userInput.nextLine();
-                System.out.println("Abreviation: ");
-                String abreviation = this.userInput.nextLine();
+                System.out.println("Abbreviation: ");
+                String abbreviation = this.userInput.nextLine();
                 System.out.println("Net worth: ");
                 int netWorth = this.userInput.nextInt();
-                Sponsor newSponsor = new Sponsor(name, abreviation, netWorth);
-                //this.repository.registerSponsor(newSponsor);
+                Sponsor newSponsor = new Sponsor(name, abbreviation, netWorth);
+                if (!this.sponsorRepositoryMemory.existsSponsor(name, abbreviation))
+                    sponsorRepositoryMemory.add(newSponsor);
+                else
+                    System.out.println("Sponsor already exists");
                 this.adminSponsorDBMenu();
             }
             case 2 -> {
@@ -1474,10 +1418,12 @@ public class UI {
                 this.userInput.nextLine();
                 System.out.println("Name: ");
                 String name = this.userInput.nextLine();
-                System.out.println("Net worth: ");
-                int netWorth = this.userInput.nextInt();
-                //findByID(name ca string 1, ca string 2 ce punem?
-                //adaugam inca un string la sponsor de ex o tara sau?
+                System.out.println("Abbreviation: ");
+                String abbreviation = this.userInput.nextLine();
+                if (this.sponsorRepositoryMemory.existsSponsor(name, abbreviation))
+                    this.sponsorRepositoryMemory.findById(name, abbreviation).printSponsor();
+                else
+                    System.out.println("Sponsor does not exist");
                 this.adminSponsorDBMenu();
             }
             case 3 -> {
@@ -1485,22 +1431,23 @@ public class UI {
                 this.userInput.nextLine();
                 System.out.println("Name: ");
                 String name = this.userInput.nextLine();
-                System.out.println("Net worth: ");
-                int netWorth = this.userInput.nextInt();
-                //findByID
-                System.out.println("Tell us the new details of the firm:");
-                this.userInput.nextLine();
-                System.out.println("Name: ");
-                String newName = this.userInput.nextLine();
-                System.out.println("Abreviation: ");
-                String abreviation = this.userInput.nextLine();
-                System.out.println("Net worth: ");
-                int newNetWorth = this.userInput.nextInt();
-                Sponsor updatedSponsor = new Sponsor(newName, abreviation, newNetWorth);
-                if (sponsorRepositoryMemory.findById(name, abreviation) != null) {
-                    sponsorRepositoryMemory.update(name, abreviation, updatedSponsor);
+                System.out.println("Abbreviation: ");
+                String abbreviation = this.userInput.nextLine();
+                if (this.sponsorRepositoryMemory.findById(name, abbreviation) != null) {
+                    System.out.println("Tell us the new details of the firm:");
+                    this.userInput.nextLine();
+                    System.out.println("Name: ");
+                    String newName = this.userInput.nextLine();
+                    System.out.println("Abbreviation: ");
+                    String newAbbreviation = this.userInput.nextLine();
+                    System.out.println("Net worth: ");
+                    int newNetWorth = this.userInput.nextInt();
+                    Sponsor updatedSponsor = new Sponsor(newName, abbreviation, newNetWorth);
+                    if (sponsorRepositoryMemory.findById(name, abbreviation) != null) {
+                        sponsorRepositoryMemory.update(name, abbreviation, updatedSponsor);
+                    }
                 } else
-                    System.out.println("Sponsor  was not found!");
+                    System.out.println("Sponsor was not found!");
                 this.adminSponsorDBMenu();
             }
             case 4 -> {
@@ -1510,9 +1457,10 @@ public class UI {
                 String name = this.userInput.nextLine();
                 System.out.println("Abbreviation: ");
                 String abbreviation = this.userInput.nextLine();
-                if (this.sponsorRepositoryMemory.findById(name, abbreviation) != null)
+                if (this.sponsorRepositoryMemory.findById(name, abbreviation) != null) {
                     this.sponsorRepositoryMemory.remove(name, abbreviation);
-                else
+                    this.sponsorRepositoryMemory.findById(name, abbreviation).disbandSponsor();
+                } else
                     System.out.println("Sponsor was not found!");
                 this.adminSponsorDBMenu();
             }

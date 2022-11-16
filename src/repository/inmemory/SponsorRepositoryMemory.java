@@ -1,10 +1,8 @@
 package repository.inmemory;
 
-import Model.Player;
 import Model.Sponsor;
 import repository.SponsorRepository;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class SponsorRepositoryMemory implements SponsorRepository {
@@ -25,14 +23,6 @@ public class SponsorRepositoryMemory implements SponsorRepository {
         SponsorRepositoryMemory.getInstance().add(new Sponsor("NTTData", "NTT", 200000000));
     }
 
-    public static SponsorRepositoryMemory getSingle_instance() {
-        return single_instance;
-    }
-
-    public static void setSingle_instance(SponsorRepositoryMemory single_instance) {
-        SponsorRepositoryMemory.single_instance = single_instance;
-    }
-
     public ArrayList<Sponsor> getAllSponsors() {
         return allSponsors;
     }
@@ -40,31 +30,19 @@ public class SponsorRepositoryMemory implements SponsorRepository {
 
     @Override
     public void add(Sponsor entity) {
-//        if(!this.existsSponsor(entity.getName(), entity.getAbreviation()))
         this.allSponsors.add(entity);
-//        else
-//            System.out.println("Sponsor already exists");
     }
 
     @Override
     public void remove(String s, String id2) {
-//        if (findById(s,id2)!=null) {
-//        findById(s, id2).disbandSponsor();
         this.allSponsors.remove(findById(s, id2));
-//
-//        }
-//        else
-//            System.out.println("Sponsor was not found!");
     }
 
     @Override
     public void update(String s, String id2, Sponsor newEntity) {
-        //if (findById(s, id2) != null) {
         this.findById(s, id2).setName(newEntity.getName());
         this.findById(s, id2).setAbbreviation(newEntity.getAbbreviation());
         this.findById(s, id2).setNetWorth(newEntity.getNetWorth());
-//        } else
-//            System.out.println("Sponsor  was not found!");
     }
 
     @Override

@@ -100,7 +100,7 @@ public class Main {
         sponsor1.sponsorTeam(team1);
 //        for(Team team: teamRepositoryMemory.getAllTeams())
 //            System.out.println(team.sponsors);
-        Controller controller=new Controller(playerRepositoryMemory,coachRepositoryMemory,teamRepositoryMemory,sponsorRepositoryMemory);
+        //ontroller controller=new Controller(playerRepositoryMemory,coachRepositoryMemory,teamRepositoryMemory,sponsorRepositoryMemory);
 
         Scanner scanner=new Scanner(System.in);
         //UI ui = new UI(scanner,playerRepositoryMemory,sponsorRepositoryMemory,teamRepositoryMemory,coachRepositoryMemory,controller);

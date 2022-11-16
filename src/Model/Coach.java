@@ -5,16 +5,15 @@ public class Coach extends Person {
 
     private Team team;
 
-    public Coach(String firstName, String lastName, int age, String nationality, String playStyle,Team currentTeam) {
-        super(firstName, lastName, age,nationality);
-        this.playStyle=playStyle;
-        this.team=currentTeam;
+    public Coach(String firstName, String lastName, int age, String nationality, String playStyle, Team currentTeam) {
+        super(firstName, lastName, age, nationality);
+        this.playStyle = playStyle;
+        this.team = currentTeam;
     }
 
     public Team getTeam() {
         return team;
     }
-
 
 
     public String getPlayStyle() {
@@ -29,8 +28,7 @@ public class Coach extends Person {
         this.team = team;
     }
 
-    public void printCoach()
-    {
+    public void printCoach() {
         System.out.println("First Name : " + this.getFirstName() + " | " + " Last Name : " + this.getLastName() + " | " + " Age : " + this.getAge() + " Year Old " + " | " + " Nationality : " + this.getNationality() + " | " + "Play Style : " + this.getPlayStyle());
     }
 

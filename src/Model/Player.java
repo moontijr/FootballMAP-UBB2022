@@ -1,7 +1,5 @@
 package Model;
 
-import Model.Person;
-
 public class Player extends Person {
     public void setPosition(String position) {
         this.position = position;
@@ -30,22 +28,19 @@ public class Player extends Person {
     }
 
     public Player(String firstName, String lastName, int age, String nationality, String position, int marketValue) {
-        super(firstName,lastName,age,nationality);
-        this.position=position;
-        this.status= "Free Agent";
-        this.marketValue=marketValue;
+        super(firstName, lastName, age, nationality);
+        this.position = position;
+        this.status = "Free Agent";
+        this.marketValue = marketValue;
     }
 
     public String getPosition() {
         return position;
     }
 
-    public void printPlayer()
-    {
-        System.out.println("First Name - " + this.getFirstName() + " | " + " Last Name - " + this.getLastName() + " | "+" Age -   " + this.getAge() +" | " + " Nationality - " + this.getNationality() + " | " + " Position - " + this.getPosition() + " | " + " Status : " + this.status + " | "+" Market Value - " + this.getMarketValue() + " Euro " );
+    public void printPlayer() {
+        System.out.println("First Name - " + this.getFirstName() + " | " + " Last Name - " + this.getLastName() + " | " + " Age -   " + this.getAge() + " | " + " Nationality - " + this.getNationality() + " | " + " Position - " + this.getPosition() + " | " + " Status : " + this.status + " | " + " Market Value - " + this.getMarketValue() + " Euro ");
     }
-
-
 
 
 }
