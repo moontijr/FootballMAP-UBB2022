@@ -53,21 +53,23 @@ public class UI {
         String username = this.userInput.nextLine();
         System.out.println("Password: ");
         String password = this.userInput.nextLine();
-        String credentials = username + password;
+        int hashedpassword=password.hashCode();
+        String hashedpasswordString= (String.valueOf(hashedpassword));
+        String credentials = username + hashedpasswordString;
         switch (credentials) {
-            case "player1000" -> {
+            case "player-985752863" -> {
                 System.out.println("You are currently in Player Mode.");
                 this.playerMenu();
             }
-            case "coach2000" -> {
+            case "coach94831770" -> {
                 System.out.println("You are currently in Coach Mode.");
                 this.coachMenu();
             }
-            case "sponsor3000" -> {
+            case "sponsor-1998892262" -> {
                 System.out.println("You are currently in Sponsor Mode.");
                 this.sponsorMenu();
             }
-            case "admin1234" -> {
+            case "admin92668751" -> {
                 System.out.println("You are currently in Admin Mode.");
                 this.adminDBsMenu();
             }
@@ -227,7 +229,8 @@ public class UI {
                 }
                 this.subMenuPlayer(player);
             case 3:
-                this.startMenu();
+                this.userInput.nextLine();
+                this.loginMenu();
             case 4:
                 System.exit(0);
         }
@@ -371,6 +374,7 @@ public class UI {
                 this.subMenuCoach(coach);
                 break;
             case 4:
+                this.userInput.nextLine();
                 System.out.println("Please choose a position");
                 String position = userInput.nextLine();
                 List<Player> myTeamSpecificPosition = playerController.sortPlayersFromSpecificTeamByPosition(coach.getTeam(), position);
@@ -446,7 +450,8 @@ public class UI {
                 this.subMenuCoach(coach);
                 break;
             case 8:
-                this.startMenu();
+                this.userInput.nextLine();
+                this.loginMenu();
             case 9:
                 System.exit(0);
         }
@@ -533,7 +538,7 @@ public class UI {
             case 2:
                 List<Team> sameSponsorTeamsSortedByValue = sponsorController.sortAllTeamsFromASponsorByMarketValue(sponsor);
                 if (sameSponsorTeamsSortedByValue == null)
-                    System.out.println("There are no sponsors");
+                    System.out.println("There are no teams");
                 else {
                     for (Team team : sameSponsorTeamsSortedByValue)
                         team.printTeam();
@@ -541,15 +546,18 @@ public class UI {
                 this.subMenuSponsor(sponsor);
             case 3:
                 System.out.println("Please type the abbreviation from the team you wish to sponsor");
+                this.userInput.nextLine();
                 String inputString = userInput.nextLine();
                 sponsorController.startSponsoring(sponsor, inputString);
                 this.subMenuSponsor(sponsor);
                 break;
             case 4:
                 System.out.println("Please type the abbreviation from the team you wish to stop sponsoring");
+                this.userInput.nextLine();
                 String inputString1 = userInput.nextLine();
                 sponsorController.endSponsoring(sponsor, inputString1);
                 this.subMenuSponsor(sponsor);
+
             case 5:
                 List<Team> sponsoredTeams = teamController.sortSponsoredTeamsByBudget(sponsor);
                 if (sponsoredTeams == null)
@@ -560,7 +568,8 @@ public class UI {
                 }
                 this.subMenuSponsor(sponsor);
             case 6:
-                this.startMenu();
+                this.userInput.nextLine();
+                this.loginMenu();
             case 7:
                 System.exit(0);
         }
@@ -605,7 +614,11 @@ public class UI {
                 System.out.println("You are currently in the Sponsors Database.");
                 this.sponsorDBMenu();
             }
-            case 5 -> this.startMenu();
+            case 5 ->
+            {
+                this.userInput.nextLine();
+                this.loginMenu();
+            }
 
             case 6 -> System.exit(0);
 
@@ -663,6 +676,7 @@ public class UI {
                 break;
             case 3:
                 System.out.println("Please choose a position");
+                this.userInput.nextLine();
                 String inputString1 = userInput.nextLine();
                 List<Player> playersWithSelectedPosition = playerController.sortAllPlayersByPosition(inputString1);
                 if (playersWithSelectedPosition == null)
@@ -676,9 +690,10 @@ public class UI {
                 break;
             case 4:
                 System.out.println("Do you want to see the free agents?\n (Y/y, else, we will list players that have a team");
+                this.userInput.nextLine();
                 String answer = this.userInput.nextLine();
                 List<Player> statusPlayers = playerController.sortPlayersByStatus(answer);
-                if (statusPlayers == null)
+                if (statusPlayers.size()==0)
                     System.out.println("There are no players\n");
                 else {
                     for (Player player : statusPlayers) {
@@ -700,6 +715,7 @@ public class UI {
                 break;
             case 6:
                 System.out.println("Please choose a nationality");
+                this.userInput.nextLine();
                 String inputString = userInput.nextLine();
                 List<Player> specificCountry = playerController.sortAllPlayersByNationality(inputString);
                 if (specificCountry == null)
@@ -735,7 +751,7 @@ public class UI {
                 1. List all coaches
                 2. Sort coaches by playing style
                 3. Sort coaches by age
-                4. Sort coaches by status
+                4. See all the coaches-teams pair
                 5. Sort coaches by nationality
                 6. Sort coaches by name
                 7. Go back
@@ -765,12 +781,12 @@ public class UI {
                 this.coachDBMenu();
                 break;
             case 2:
-                this.dataBasesMenu();
                 System.out.println("Please choose the playing style of the coaches you want to see");
+                this.userInput.nextLine();
                 String playstyle = userInput.nextLine();
                 List<Coach> allCoachesSortedByPlaystyle = coachController.sortAllCoachesByPlayStyle(playstyle);
                 if (allCoachesSortedByPlaystyle == null)
-                    System.out.println("There are no coaches");
+                    System.out.println("There are no coaches with this playstyle");
                 else {
                     for (Coach coach : allCoachesSortedByPlaystyle)
                         coach.printCoach();
@@ -788,13 +804,18 @@ public class UI {
                 this.coachDBMenu();
                 break;
             case 4:
+                for (Coach coach : coachRepositoryMemory.getAllCoaches()) {
+                   System.out.println(coach.getFirstName()+ " " + coach.getLastName()+" training the Team "+ coach.getTeam().getName());
+                }
                 this.coachDBMenu();
+                break;
             case 5:
                 System.out.println("Please choose a nationality");
+                this.userInput.nextLine();
                 String country = userInput.nextLine();
                 List<Coach> allCoachesSortedByNationality = coachController.sortAllCoachesByNationality(country);
                 if (allCoachesSortedByNationality == null)
-                    System.out.println("There are no coaches");
+                    System.out.println("There are no coaches from this nationality");
                 else {
                     for (Coach coach : allCoachesSortedByNationality)
                         coach.printCoach();
@@ -848,16 +869,33 @@ public class UI {
                 this.teamsDBMenu();
                 break;
             case 2:
+                teamController.sortAllTeamsByValue();
+                List<Team> allTeamsSortedByValue = teamController.sortAllTeamsByValue();
+                if (allTeamsSortedByValue == null)
+                    System.out.println("There are no teams");
+                else {
+                    for (Team team : allTeamsSortedByValue)
+                        team.printTeam();
+                }
                 this.teamsDBMenu();
                 break;
             case 3:
+                teamController.sortAllTeamsByName();
+                List<Team> allTeamsSortedByName = teamController.sortAllTeamsByName();
+                if (allTeamsSortedByName == null)
+                    System.out.println("There are no teams");
+                else {
+                    for (Team team : allTeamsSortedByName)
+                        team.printTeam();
+                }
                 this.teamsDBMenu();
                 break;
             case 4:
                 System.out.println("Please choose the country ");
+                this.userInput.nextLine();
                 String country = userInput.nextLine();
                 List<Team> teamsFromCountry = teamController.sortAllTeamsByCountry(country);
-                if (teamsFromCountry == null)
+                if (teamsFromCountry.size() == 0)
                     System.out.println("There are no teams from this country");
                 else
                     for (Team team : teamsFromCountry)
@@ -941,19 +979,44 @@ public class UI {
                 break;
             case 4:
                 System.out.println("Tell us the sponsor's name:");
+                this.userInput.nextLine();
                 String sponsor = this.userInput.nextLine();
                 System.out.println("Sponsor abbreviation: ");
                 String abbreviation = this.userInput.nextLine();
-                if (sponsorRepositoryMemory.existsSponsor(sponsor, abbreviation)) {
+                if (sponsorRepositoryMemory.findById(sponsor, abbreviation)!=null) {
                     List<Team> sameSponsorTeams = teamController.getAllTeamsAffiliatedWithSponsor(sponsorRepositoryMemory.findById(sponsor, abbreviation));
-                    for (Team team : sameSponsorTeams)
-                        team.printTeam();
-                } else {
+                    if (sameSponsorTeams==null)
+                        System.out.println("There are no Teams");
+                    else {
+                        for (Team team : sameSponsorTeams)
+                            team.printTeam();
+                    }
+                }
+                else
+                {
                     System.out.println("There is no such sponsor.");
                 }
                 this.sponsorDBMenu();
                 break;
             case 5:
+                System.out.println("Tell us the team's name:");
+                this.userInput.nextLine();
+                String team = this.userInput.nextLine();
+                System.out.println("Team abbreviation: ");
+                String abbreviation1 = this.userInput.nextLine();
+                if(teamRepositoryMemory.findById(team,abbreviation1)!=null) {
+                    List<Sponsor> allSponsorsFromAteam = sponsorController.allSponsorsFromATeam(teamRepositoryMemory.findById(team,abbreviation1));
+                    if (allSponsorsFromAteam.size()==0)
+                        System.out.println("There are no Sponsors");
+                    else {
+                        for (Sponsor sponsor1 : allSponsorsFromAteam)
+                            sponsor1.printSponsor();
+                    }
+                }
+                else
+                {
+                    System.out.println("There is no such team.");
+                }
                 this.sponsorDBMenu();
                 break;
             case 6:
@@ -1002,7 +1065,10 @@ public class UI {
                 System.out.println("You are currently in the Sponsors Database.");
                 this.adminSponsorDBMenu();
             }
-            case 5 -> this.startMenu();
+            case 5 -> {
+                this.userInput.nextLine();
+                this.loginMenu();
+            }
 
             case 6 -> System.exit(0);
 
@@ -1442,7 +1508,7 @@ public class UI {
                     String newAbbreviation = this.userInput.nextLine();
                     System.out.println("Net worth: ");
                     int newNetWorth = this.userInput.nextInt();
-                    Sponsor updatedSponsor = new Sponsor(newName, abbreviation, newNetWorth);
+                    Sponsor updatedSponsor = new Sponsor(newName, newAbbreviation, newNetWorth);
                     if (sponsorRepositoryMemory.findById(name, abbreviation) != null) {
                         sponsorRepositoryMemory.update(name, abbreviation, updatedSponsor);
                     }

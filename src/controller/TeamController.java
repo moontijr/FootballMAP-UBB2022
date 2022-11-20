@@ -68,6 +68,18 @@ public class TeamController {
             return null;
     }
 
+    public List<Team> sortAllTeamsByName() {
+        List<Team> allTeams = teamRepositoryMemory.getAllTeams();
+        allTeams.sort(Comparator.comparing(Team::getName));
+        return allTeams;
+    }
+
+    public List<Team> sortAllTeamsByValue() {
+        List<Team> allTeams = teamRepositoryMemory.getAllTeams();
+        allTeams.sort(Comparator.comparing(Team::getSquadValue));
+        return allTeams;
+    }
+
     public List<Team> sortAllTeamsByCountry(String country) {
         List<Team> allTeamsFromACountry = new ArrayList<>();
         for (Team team : teamRepositoryMemory.getAllTeams())
@@ -75,5 +87,4 @@ public class TeamController {
                 allTeamsFromACountry.add(team);
         return allTeamsFromACountry;
     }
-
 }

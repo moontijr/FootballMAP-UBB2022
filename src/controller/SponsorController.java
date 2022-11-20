@@ -133,6 +133,11 @@ public class SponsorController {
         return false;
     }
 
+    public List<Sponsor> allSponsorsFromATeam (Team team)
+    {
+        return new ArrayList<>(team.sponsors);
+    }
+
 }
 
 
