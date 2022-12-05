@@ -4,10 +4,8 @@ import Model.Coach;
 import Model.Player;
 import Model.Sponsor;
 import Model.Team;
-import controller.CoachController;
-import controller.PlayerController;
-import controller.SponsorController;
-import controller.TeamController;
+import controller.*;
+import org.junit.platform.commons.function.Try;
 import repository.inmemory.CoachRepositoryMemory;
 import repository.inmemory.PlayerRepositoryMemory;
 import repository.inmemory.SponsorRepositoryMemory;
@@ -53,8 +51,8 @@ public class UI {
         String username = this.userInput.nextLine();
         System.out.println("Password: ");
         String password = this.userInput.nextLine();
-        int hashedpassword=password.hashCode();
-        String hashedpasswordString= (String.valueOf(hashedpassword));
+        int hashedpassword = password.hashCode();
+        String hashedpasswordString = (String.valueOf(hashedpassword));
         String credentials = username + hashedpasswordString;
         switch (credentials) {
             case "player-985752863" -> {
@@ -153,30 +151,74 @@ public class UI {
                 this.userInput.nextLine();
                 System.out.println("First Name: ");
                 String firstName = this.userInput.nextLine();
+                if (!playerController.checkString(firstName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.playerMenu();
+                }
                 System.out.println("Last Name: ");
                 String lastName = this.userInput.nextLine();
+                if (!playerController.checkString(lastName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.playerMenu();
+                }
                 System.out.println("Age: ");
-                int age = this.userInput.nextInt();
-                this.userInput.nextLine();
-                System.out.println("Nationality: ");
-                String nationality = this.userInput.nextLine();
-                System.out.println("Position: ");
-                String position = this.userInput.nextLine();
-                System.out.println("Market value: ");
-                int marketValue = this.userInput.nextInt();
-                Player newPlayer = new Player(firstName, lastName, age, nationality, position, marketValue);
-                if (!playerRepositoryMemory.existsPlayer(firstName, lastName))
-                    this.playerRepositoryMemory.add(newPlayer);
-                else System.out.println("Player is already there");
-                subMenuPlayer(newPlayer);
+                try {
+                    int age = Integer.parseInt(this.userInput.nextLine());
+                    System.out.println("Nationality: ");
+                    String nationality = this.userInput.nextLine();
+                    if (!playerController.checkString(nationality)) {
+                        System.out.println("Please provide a valid nationality, without any other digits. Press Anything to go back");
+                        this.userInput.nextLine();
+                        this.playerMenu();
+                    }
+                    System.out.println("Position: ");
+                    String position = this.userInput.nextLine();
+                    if (!playerController.checkString(position)) {
+                        System.out.println("Please provide a valid position, without any other digits. Press Anything to go back");
+                        this.userInput.nextLine();
+                        this.playerMenu();
+                    }
+                    System.out.println("Market value: ");
+                    try {
+                        int marketValue = Integer.parseInt(this.userInput.nextLine());
+                        Player newPlayer = new Player(firstName, lastName, age, nationality, position, marketValue);
+                        if (!playerRepositoryMemory.existsPlayer(firstName, lastName))
+                            this.playerRepositoryMemory.add(newPlayer);
+                        else System.out.println("Player is already there");
+                        subMenuPlayer(newPlayer);
+                    } catch (Exception e) {
+                        System.out.println("Please provide an Integer at the Market Value. Press Any Button to get back");
+                        this.userInput.nextLine();
+                        this.playerMenu();
+
+                    }
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Please provide an Integer at the age. Press Any Button to get back");
+                    this.userInput.nextLine();
+                    this.playerMenu();
+
+                }
             }
+
             case 2 -> {
                 System.out.println("Great! Tell us your name:");
                 this.userInput.nextLine();
                 System.out.println("First Name: ");
                 String firstName = this.userInput.nextLine();
+                if (!playerController.checkString(firstName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.playerMenu();
+                }
                 System.out.println("Last Name: ");
                 String lastName = this.userInput.nextLine();
+                if (!playerController.checkString(lastName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.playerMenu();
+                }
                 for (Player player : playerRepositoryMemory.getAllPlayers()) {
                     if (player.getFirstName().contains(firstName) && player.getLastName().contains(lastName))
                         subMenuPlayer(player);
@@ -260,48 +302,75 @@ public class UI {
                 this.userInput.nextLine();
                 System.out.println("First Name: ");
                 String firstName = this.userInput.nextLine();
+                if (!playerController.checkString(firstName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.playerMenu();
+                }
                 System.out.println("Last Name: ");
                 String lastName = this.userInput.nextLine();
+                if (!playerController.checkString(lastName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.playerMenu();
+                }
                 System.out.println("Age: ");
-                int age = this.userInput.nextInt();
-                this.userInput.nextLine();
-                System.out.println("Nationality: ");
-                String nationality = this.userInput.nextLine();
-                System.out.println("Playstyle: ");
-                String playstyle = this.userInput.nextLine();
-                System.out.println("Your current team(abbreviation): ");
-                String myTeam = this.userInput.nextLine();
-                int counter = 0;
-                for (Team team : teamRepositoryMemory.getAllTeams())
-                    if (team.getAbbreviation().contains(myTeam))
-                        counter++;
-                if (counter == 0) {
-                    System.out.println("There is no team with such an abbreviation in our database");
-                    this.coachMenu();
-                } else {
-                    Team newTeam = null;
+                try {
+                    int age = Integer.parseInt(this.userInput.nextLine());
+                    this.userInput.nextLine();
+                    System.out.println("Nationality: ");
+                    String nationality = this.userInput.nextLine();
+                    System.out.println("Playstyle: ");
+                    String playstyle = this.userInput.nextLine();
+                    System.out.println("Your current team(abbreviation): ");
+                    String myTeam = this.userInput.nextLine();
+                    int counter = 0;
                     for (Team team : teamRepositoryMemory.getAllTeams())
                         if (team.getAbbreviation().contains(myTeam))
-                            newTeam = team;
+                            counter++;
+                    if (counter == 0) {
+                        System.out.println("There is no team with such an abbreviation in our database");
+                        this.coachMenu();
+                    } else {
+                        Team newTeam = null;
+                        for (Team team : teamRepositoryMemory.getAllTeams())
+                            if (team.getAbbreviation().contains(myTeam))
+                                newTeam = team;
 
-                    Coach newCoach = new Coach(firstName, lastName, age, nationality, playstyle, newTeam);
-                    if (!this.coachRepositoryMemory.existsCoach(newCoach.getFirstName(), newCoach.getLastName()))
-                        coachRepositoryMemory.add(newCoach);
-                    else
+                        Coach newCoach = new Coach(firstName, lastName, age, nationality, playstyle, newTeam);
+                        if (!this.coachRepositoryMemory.existsCoach(newCoach.getFirstName(), newCoach.getLastName()))
+                            coachRepositoryMemory.add(newCoach);
+                        else
 
-                        System.out.println("Coach already exists");
+                            System.out.println("Coach already exists");
 
 
-                    this.subMenuCoach(newCoach);
+                        this.subMenuCoach(newCoach);
+                    }
+                } catch (Exception e) {
+                    System.out.println("Please provide an Integer at the age. Press Any Button to get back");
+                    this.userInput.nextLine();
+                    this.coachMenu();
                 }
+
             }
             case 2 -> {
                 System.out.println("Great! Tell us your name:");
                 this.userInput.nextLine();
                 System.out.println("First Name: ");
                 String firstName = this.userInput.nextLine();
+                if (!playerController.checkString(firstName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.playerMenu();
+                }
                 System.out.println("Last Name: ");
                 String lastName = this.userInput.nextLine();
+                if (!playerController.checkString(lastName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.playerMenu();
+                }
                 for (Coach coach : coachRepositoryMemory.getAllCoaches()) {
                     if (coach.getFirstName().contains(firstName) && coach.getLastName().contains(lastName))
                         subMenuCoach(coach);
@@ -484,13 +553,19 @@ public class UI {
                 System.out.println("Abbreviation: ");
                 String abbreviation = this.userInput.nextLine();
                 System.out.println("Net worth: ");
-                int netWorth = this.userInput.nextInt();
-                Sponsor newSponsor = new Sponsor(name, abbreviation, netWorth);
-                if (!this.sponsorRepositoryMemory.existsSponsor(name, abbreviation))
-                    sponsorRepositoryMemory.add(newSponsor);
-                else
-                    System.out.println("Sponsor already exists");
-                this.subMenuSponsor(newSponsor);
+                try {
+                    int netWorth = Integer.parseInt(this.userInput.nextLine());
+                    Sponsor newSponsor = new Sponsor(name, abbreviation, netWorth);
+                    if (!this.sponsorRepositoryMemory.existsSponsor(name, abbreviation))
+                        sponsorRepositoryMemory.add(newSponsor);
+                    else
+                        System.out.println("Sponsor already exists");
+                    this.subMenuSponsor(newSponsor);
+                } catch (Exception e) {
+                    System.out.println("Please provide an Integer Value for The Net Worth of the Firm. Press any button to get back in the menu");
+                    this.userInput.nextLine();
+                    this.sponsorMenu();
+                }
             case 2:
                 System.out.println("Great! Tell us your name of the firm");
                 this.userInput.nextLine();
@@ -614,8 +689,7 @@ public class UI {
                 System.out.println("You are currently in the Sponsors Database.");
                 this.sponsorDBMenu();
             }
-            case 5 ->
-            {
+            case 5 -> {
                 this.userInput.nextLine();
                 this.loginMenu();
             }
@@ -693,7 +767,7 @@ public class UI {
                 this.userInput.nextLine();
                 String answer = this.userInput.nextLine();
                 List<Player> statusPlayers = playerController.sortPlayersByStatus(answer);
-                if (statusPlayers.size()==0)
+                if (statusPlayers.size() == 0)
                     System.out.println("There are no players\n");
                 else {
                     for (Player player : statusPlayers) {
@@ -805,7 +879,7 @@ public class UI {
                 break;
             case 4:
                 for (Coach coach : coachRepositoryMemory.getAllCoaches()) {
-                   System.out.println(coach.getFirstName()+ " " + coach.getLastName()+" training the Team "+ coach.getTeam().getName());
+                    System.out.println(coach.getFirstName() + " " + coach.getLastName() + " training the Team " + coach.getTeam().getName());
                 }
                 this.coachDBMenu();
                 break;
@@ -983,17 +1057,15 @@ public class UI {
                 String sponsor = this.userInput.nextLine();
                 System.out.println("Sponsor abbreviation: ");
                 String abbreviation = this.userInput.nextLine();
-                if (sponsorRepositoryMemory.findById(sponsor, abbreviation)!=null) {
+                if (sponsorRepositoryMemory.findById(sponsor, abbreviation) != null) {
                     List<Team> sameSponsorTeams = teamController.getAllTeamsAffiliatedWithSponsor(sponsorRepositoryMemory.findById(sponsor, abbreviation));
-                    if (sameSponsorTeams==null)
+                    if (sameSponsorTeams == null)
                         System.out.println("There are no Teams");
                     else {
                         for (Team team : sameSponsorTeams)
                             team.printTeam();
                     }
-                }
-                else
-                {
+                } else {
                     System.out.println("There is no such sponsor.");
                 }
                 this.sponsorDBMenu();
@@ -1004,17 +1076,15 @@ public class UI {
                 String team = this.userInput.nextLine();
                 System.out.println("Team abbreviation: ");
                 String abbreviation1 = this.userInput.nextLine();
-                if(teamRepositoryMemory.findById(team,abbreviation1)!=null) {
-                    List<Sponsor> allSponsorsFromAteam = sponsorController.allSponsorsFromATeam(teamRepositoryMemory.findById(team,abbreviation1));
-                    if (allSponsorsFromAteam.size()==0)
+                if (teamRepositoryMemory.findById(team, abbreviation1) != null) {
+                    List<Sponsor> allSponsorsFromAteam = sponsorController.allSponsorsFromATeam(teamRepositoryMemory.findById(team, abbreviation1));
+                    if (allSponsorsFromAteam.size() == 0)
                         System.out.println("There are no Sponsors");
                     else {
                         for (Sponsor sponsor1 : allSponsorsFromAteam)
                             sponsor1.printSponsor();
                     }
-                }
-                else
-                {
+                } else {
                     System.out.println("There is no such team.");
                 }
                 this.sponsorDBMenu();
@@ -1105,22 +1175,55 @@ public class UI {
                 this.userInput.nextLine();
                 System.out.println("First Name: ");
                 String firstName = this.userInput.nextLine();
+                if (!playerController.checkString(firstName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.adminPlayerDBMenu();
+                }
                 System.out.println("Last Name: ");
                 String lastName = this.userInput.nextLine();
+                if (!playerController.checkString(lastName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.adminPlayerDBMenu();
+                }
                 System.out.println("Age: ");
-                int age = this.userInput.nextInt();
-                this.userInput.nextLine();
-                System.out.println("Nationality: ");
-                String nationality = this.userInput.nextLine();
-                System.out.println("Position: ");
-                String position = this.userInput.nextLine();
-                System.out.println("Market value: ");
-                int marketValue = this.userInput.nextInt();
-                Player newPlayer = new Player(firstName, lastName, age, nationality, position, marketValue);
-                if (!playerRepositoryMemory.existsPlayer(firstName, lastName))
-                    this.playerRepositoryMemory.add(newPlayer);
-                else System.out.println("Player is already there");
-                this.adminPlayerDBMenu();
+                try {
+                    int age = Integer.parseInt(this.userInput.nextLine());
+                    System.out.println("Nationality: ");
+                    String nationality = this.userInput.nextLine();
+                    if (!playerController.checkString(nationality)) {
+                        System.out.println("Please provide a valid nationality, without any other characters. Press Anything to go back");
+                        this.userInput.nextLine();
+                        this.adminPlayerDBMenu();
+                    }
+                    System.out.println("Position: ");
+                    String position = this.userInput.nextLine();
+                    if (!playerController.checkString(position)) {
+                        System.out.println("Please provide a valid position, without any other characters. Press Anything to go back");
+                        this.userInput.nextLine();
+                        this.adminPlayerDBMenu();
+                    }
+                    System.out.println("Market value: ");
+                    try {
+                        int marketValue = this.userInput.nextInt();
+                        Player newPlayer = new Player(firstName, lastName, age, nationality, position, marketValue);
+                        if (!playerRepositoryMemory.existsPlayer(firstName, lastName))
+                            this.playerRepositoryMemory.add(newPlayer);
+                        else System.out.println("Player is already there");
+                        this.adminPlayerDBMenu();
+                    } catch (Exception e) {
+                        System.out.println("Please provide an Integer at the Market Value. Press Any Button to get back");
+                        this.userInput.nextLine();
+                        this.userInput.nextLine();
+                        this.adminPlayerDBMenu();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Please provide an Integer at the Age. Press Any Button to get back");
+                    this.userInput.nextLine();
+                    this.adminPlayerDBMenu();
+                }
+
             }
             case 2 -> {
                 System.out.println("Who are you looking for?");
@@ -1153,19 +1256,55 @@ public class UI {
                     this.userInput.nextLine();
                     System.out.println("First Name: ");
                     String newFirstName = this.userInput.nextLine();
+                    if (!playerController.checkString(newFirstName)) {
+                        System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                        this.userInput.nextLine();
+                        this.adminPlayerDBMenu();
+                    }
                     System.out.println("Last Name: ");
                     String newLastName = this.userInput.nextLine();
+                    if (!playerController.checkString(newLastName)) {
+                        System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                        this.userInput.nextLine();
+                        this.adminPlayerDBMenu();
+                    }
                     System.out.println("Age: ");
-                    int newAge = this.userInput.nextInt();
-                    this.userInput.nextLine();
-                    System.out.println("Nationality: ");
-                    String newNationality = this.userInput.nextLine();
-                    System.out.println("Position: ");
-                    String newPosition = this.userInput.nextLine();
-                    System.out.println("Market value: ");
-                    int newMarketValue = this.userInput.nextInt();
-                    Player updatedPlayer = new Player(newFirstName, newLastName, newAge, newNationality, newPosition, newMarketValue);
-                    playerRepositoryMemory.update(firstName, lastName, updatedPlayer);
+                    try {
+                        int newAge = Integer.parseInt(this.userInput.nextLine());
+                        this.userInput.nextLine();
+                        System.out.println("Nationality: ");
+                        String newNationality = this.userInput.nextLine();
+                        if (!playerController.checkString(newNationality)) {
+                            System.out.println("Please provide a valid nationality, without any other characters. Press Anything to go back");
+                            this.userInput.nextLine();
+                            this.adminPlayerDBMenu();
+                        }
+                        System.out.println("Position: ");
+                        String newPosition = this.userInput.nextLine();
+                        if (!playerController.checkString(newPosition)) {
+                            System.out.println("Please provide a valid position, without any other characters. Press Anything to go back");
+                            this.userInput.nextLine();
+                            this.adminPlayerDBMenu();
+                        }
+                        System.out.println("Market value: ");
+                        try {
+                            int newMarketValue = this.userInput.nextInt();
+                            Player updatedPlayer = new Player(newFirstName, newLastName, newAge, newNationality, newPosition, newMarketValue);
+                            playerRepositoryMemory.update(firstName, lastName, updatedPlayer);
+                        } catch (Exception e) {
+                            System.out.println("Please provide an Integer at the Market Value. Press Any Button to get back");
+                            this.userInput.nextLine();
+                            this.adminPlayerDBMenu();
+                        }
+                        int newMarketValue = Integer.parseInt(this.userInput.nextLine());
+                        Player updatedPlayer = new Player(newFirstName, newLastName, newAge, newNationality, newPosition, newMarketValue);
+                        playerRepositoryMemory.update(firstName, lastName, updatedPlayer);
+                    } catch (Exception e) {
+                        System.out.println("Please provide an Integer at the Age. Press Any Button to get back");
+                        this.userInput.nextLine();
+                        this.adminPlayerDBMenu();
+                    }
+
                 } else
                     System.out.println("Player does not exist");
                 this.adminPlayerDBMenu();
@@ -1218,38 +1357,64 @@ public class UI {
                 this.userInput.nextLine();
                 System.out.println("First Name: ");
                 String firstName = this.userInput.nextLine();
-                System.out.println("Last Name: ");
-                String lastName = this.userInput.nextLine();
-                System.out.println("Age: ");
-                int age = this.userInput.nextInt();
-                this.userInput.nextLine();
-                System.out.println("Nationality: ");
-                String nationality = this.userInput.nextLine();
-                System.out.println("Playstyle: ");
-                String playstyle = this.userInput.nextLine();
-                System.out.println("Your current team: ");
-                String myTeam = this.userInput.nextLine();
-                int counter = 0;
-                for (Team team : teamRepositoryMemory.getAllTeams())
-                    if (team.getAbbreviation().contains(myTeam))
-                        counter++;
-                if (counter == 0) {
-                    System.out.println("There is no team with such an abbreviation in our database");
-                    this.adminCoachDBMenu();
-                } else {
-                    Team newTeam = null;
-                    for (Team team : teamRepositoryMemory.getAllTeams())
-                        if (team.getAbbreviation().contains(myTeam))
-                            newTeam = team;
-
-                    Coach newCoach = new Coach(firstName, lastName, age, nationality, playstyle, newTeam);
-                    if (!this.coachRepositoryMemory.existsCoach(newCoach.getFirstName(), newCoach.getLastName()))
-                        coachRepositoryMemory.add(newCoach);
-                    else
-                        System.out.println("Coach already exists");
-
+                if (!playerController.checkString(firstName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
                     this.adminCoachDBMenu();
                 }
+                System.out.println("Last Name: ");
+                String lastName = this.userInput.nextLine();
+                if (!playerController.checkString(lastName)) {
+                    System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.adminCoachDBMenu();
+                }
+                System.out.println("Age: ");
+                try {
+                    int age = Integer.parseInt(this.userInput.nextLine());
+                    System.out.println("Nationality: ");
+                    String nationality = this.userInput.nextLine();
+                    if (!playerController.checkString(nationality)) {
+                        System.out.println("Please provide a valid nationality, without any other characters. Press Anything to go back");
+                        this.userInput.nextLine();
+                        this.adminCoachDBMenu();
+                    }
+                    System.out.println("Playstyle: ");
+                    String playstyle = this.userInput.nextLine();
+                    if (!playerController.checkString(playstyle)) {
+                        System.out.println("Please provide a valid playstyle, without any other characters. Press Anything to go back");
+                        this.userInput.nextLine();
+                        this.adminCoachDBMenu();
+                    }
+                    System.out.println("Your current team: ");
+                    String myTeam = this.userInput.nextLine();
+                    int counter = 0;
+                    for (Team team : teamRepositoryMemory.getAllTeams())
+                        if (team.getAbbreviation().contains(myTeam))
+                            counter++;
+                    if (counter == 0) {
+                        System.out.println("There is no team with such an abbreviation in our database");
+                    } else {
+                        Team newTeam = null;
+                        for (Team team : teamRepositoryMemory.getAllTeams())
+                            if (team.getAbbreviation().contains(myTeam))
+                                newTeam = team;
+
+                        Coach newCoach = new Coach(firstName, lastName, age, nationality, playstyle, newTeam);
+                        if (!this.coachRepositoryMemory.existsCoach(newCoach.getFirstName(), newCoach.getLastName()))
+                            coachRepositoryMemory.add(newCoach);
+                        else
+                            System.out.println("Coach already exists");
+
+                    }
+                    this.adminCoachDBMenu();
+                } catch (Exception e) {
+                    System.out.println("Please provide an Integer at the Age. Press Any Button to get back");
+                    this.userInput.nextLine();
+                    this.adminCoachDBMenu();
+
+                }
+
             }
             case 2 -> {
                 System.out.println("Tell us his name:");
@@ -1277,33 +1442,60 @@ public class UI {
                     this.userInput.nextLine();
                     System.out.println("First Name: ");
                     String newFirstName = this.userInput.nextLine();
+                    if (!playerController.checkString(newFirstName)) {
+                        System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                        this.userInput.nextLine();
+                        this.adminCoachDBMenu();
+                    }
                     System.out.println("Last Name: ");
                     String newLastName = this.userInput.nextLine();
-                    System.out.println("Age: ");
-                    int age = this.userInput.nextInt();
-                    this.userInput.nextLine();
-                    System.out.println("Nationality: ");
-                    String nationality = this.userInput.nextLine();
-                    System.out.println("Playstyle: ");
-                    String playstyle = this.userInput.nextLine();
-                    System.out.println("Your current team: ");
-                    String myTeam = this.userInput.nextLine();
-                    int counter = 0;
-                    for (Team team : teamRepositoryMemory.getAllTeams())
-                        if (team.getAbbreviation().contains(myTeam))
-                            counter++;
-                    if (counter == 0) {
-                        System.out.println("There is no team with such an abbreviation in our database");
+                    if (!playerController.checkString(newLastName)) {
+                        System.out.println("Please provide a valid name, without any other characters. Press Anything to go back");
+                        this.userInput.nextLine();
                         this.adminCoachDBMenu();
-                    } else {
-                        Team newTeam = null;
+                    }
+                    System.out.println("Age: ");
+                    try {
+                        int age = Integer.parseInt(this.userInput.nextLine());
+                        System.out.println("Nationality: ");
+                        String nationality = this.userInput.nextLine();
+                        if (!playerController.checkString(nationality)) {
+                            System.out.println("Please provide a valid nationality, without any other characters. Press Anything to go back");
+                            this.userInput.nextLine();
+                            this.adminCoachDBMenu();
+                        }
+                        System.out.println("Playstyle: ");
+                        String playstyle = this.userInput.nextLine();
+                        if (!playerController.checkString(playstyle)) {
+                            System.out.println("Please provide a valid playstyle, without any other characters. Press Anything to go back");
+                            this.userInput.nextLine();
+                            this.adminCoachDBMenu();
+                        }
+                        System.out.println("Your current team: ");
+                        String myTeam = this.userInput.nextLine();
+                        int counter = 0;
                         for (Team team : teamRepositoryMemory.getAllTeams())
                             if (team.getAbbreviation().contains(myTeam))
-                                newTeam = team;
+                                counter++;
+                        if (counter == 0) {
+                            System.out.println("There is no team with such an abbreviation in our database");
+                            this.adminCoachDBMenu();
+                        } else {
+                            Team newTeam = null;
+                            for (Team team : teamRepositoryMemory.getAllTeams())
+                                if (team.getAbbreviation().contains(myTeam))
+                                    newTeam = team;
 
-                        Coach newCoach = new Coach(newFirstName, newLastName, age, nationality, playstyle, newTeam);
-                        coachRepositoryMemory.update(firstName, lastName, newCoach);
+                            Coach newCoach = new Coach(newFirstName, newLastName, age, nationality, playstyle, newTeam);
+                            coachRepositoryMemory.update(firstName, lastName, newCoach);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Please provide an Integer at the age. Press Any Button to get back");
+                        this.userInput.nextLine();
+                        this.adminCoachDBMenu();
                     }
+
+
                 } else
                     System.out.println("Coach was not found!");
                 this.adminCoachDBMenu();
@@ -1356,23 +1548,51 @@ public class UI {
                 String abbreviation = this.userInput.nextLine();
                 System.out.println("Country: ");
                 String country = this.userInput.nextLine();
+                if (!playerController.checkString(country)) {
+                    System.out.println("Please provide a valid country, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.adminTeamsDBMenu();
+                }
                 System.out.println("Town: ");
                 String town = this.userInput.nextLine();
+                if (!playerController.checkString(town)) {
+                    System.out.println("Please provide a valid town, without any other characters. Press Anything to go back");
+                    this.userInput.nextLine();
+                    this.adminTeamsDBMenu();
+                }
                 System.out.println("Foundation Year: ");
-                int foundationYear = this.userInput.nextInt();
-                this.userInput.nextLine();
-                System.out.println("Squad capacity: ");
-                int maxSquadSize = this.userInput.nextInt();
-                this.userInput.nextLine();
-                System.out.println("Budget: ");
-                int budget = this.userInput.nextInt();
-                this.userInput.nextLine();
-                Team newTeam = new Team(name, abbreviation, country, town, foundationYear, maxSquadSize, budget);
-                if (this.teamRepositoryMemory.findById(newTeam.getName(), newTeam.getAbbreviation()) == null)
-                    this.teamRepositoryMemory.add(newTeam);
-                else
-                    System.out.println("Team already exists");
-                this.adminTeamsDBMenu();
+                try {
+                    int foundationYear = Integer.parseInt(this.userInput.nextLine());
+                    System.out.println("Squad capacity: ");
+                    try {
+                        int maxSquadSize = Integer.parseInt(this.userInput.nextLine());
+                        System.out.println("Budget: ");
+                        try {
+                            int budget = Integer.parseInt(this.userInput.nextLine());
+                            Team newTeam = new Team(name, abbreviation, country, town, foundationYear, maxSquadSize, budget);
+                            if (this.teamRepositoryMemory.findById(newTeam.getName(), newTeam.getAbbreviation()) == null)
+                                this.teamRepositoryMemory.add(newTeam);
+                            else
+                                System.out.println("Team already exists");
+                            this.adminTeamsDBMenu();
+                        } catch (Exception e) {
+                            System.out.println("Please provide a valid budget. Press anything to go back to the menu");
+                            this.userInput.nextLine();
+                            this.adminTeamsDBMenu();
+                        }
+
+                    } catch (Exception e) {
+                        System.out.println("Please provide a valid squad capacity. Press anything to go back to the menu");
+                        this.userInput.nextLine();
+                        this.adminTeamsDBMenu();
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Please provide a valid foundation year. Press anything to go back to the menu");
+                    this.userInput.nextLine();
+                    this.adminTeamsDBMenu();
+                }
+
             }
             case 2 -> {
                 System.out.println("Tell us the details of the team: ");
@@ -1404,17 +1624,50 @@ public class UI {
                     String newAbbreviation = this.userInput.nextLine();
                     System.out.println("Country: ");
                     String country = this.userInput.nextLine();
+                    if (!playerController.checkString(country)) {
+                        System.out.println("Please provide a valid country, without any other characters. Press Anything to go back");
+                        this.userInput.nextLine();
+                        this.adminTeamsDBMenu();
+                    }
                     System.out.println("Town: ");
                     String town = this.userInput.nextLine();
+                    if (!playerController.checkString(town)) {
+                        System.out.println("Please provide a valid town, without any other characters. Press Anything to go back");
+                        this.userInput.nextLine();
+                        this.adminTeamsDBMenu();
+                    }
                     System.out.println("Foundation Year: ");
-                    int foundationYear = this.userInput.nextInt();
-                    this.userInput.nextLine();
+                    try {
+                        int foundationYear = Integer.parseInt(this.userInput.nextLine());
+                        System.out.println("Squad capacity: ");
+                        try {
+                            int maxSquadSize = Integer.parseInt(this.userInput.nextLine());
+                            System.out.println("Budget: ");
+                            try {
+                                int budget = Integer.parseInt(this.userInput.nextLine());
+                                Team updatedTeam = new Team(newName, newAbbreviation, country, town, foundationYear, maxSquadSize, budget);
+                                teamRepositoryMemory.update(name, abbreviation, updatedTeam);
+                            } catch (Exception e) {
+                                System.out.println("Please provide a valid budget. Press anything to go back to the menu");
+                                this.userInput.nextLine();
+                                this.adminTeamsDBMenu();
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Please provide a valid maximum squad size. Press anything to go back to the menu");
+                            this.userInput.nextLine();
+                            this.adminTeamsDBMenu();
+                        }
+
+                    } catch (Exception e) {
+                        System.out.println("Please provide a valid foundation year. Press anything to go back to the menu");
+                        this.userInput.nextLine();
+                        this.adminTeamsDBMenu();
+                    }
+                    int foundationYear = Integer.parseInt(this.userInput.nextLine());
                     System.out.println("Squad capacity: ");
-                    int maxSquadSize = this.userInput.nextInt();
-                    this.userInput.nextLine();
+                    int maxSquadSize = Integer.parseInt(this.userInput.nextLine());
                     System.out.println("Budget: ");
-                    int budget = this.userInput.nextInt();
-                    this.userInput.nextLine();
+                    int budget = Integer.parseInt(this.userInput.nextLine());
                     Team updatedTeam = new Team(newName, newAbbreviation, country, town, foundationYear, maxSquadSize, budget);
                     teamRepositoryMemory.update(name, abbreviation, updatedTeam);
                 } else {
@@ -1471,13 +1724,20 @@ public class UI {
                 System.out.println("Abbreviation: ");
                 String abbreviation = this.userInput.nextLine();
                 System.out.println("Net worth: ");
-                int netWorth = this.userInput.nextInt();
-                Sponsor newSponsor = new Sponsor(name, abbreviation, netWorth);
-                if (!this.sponsorRepositoryMemory.existsSponsor(name, abbreviation))
-                    sponsorRepositoryMemory.add(newSponsor);
-                else
-                    System.out.println("Sponsor already exists");
-                this.adminSponsorDBMenu();
+                try {
+                    int netWorth = Integer.parseInt(this.userInput.nextLine());
+                    Sponsor newSponsor = new Sponsor(name, abbreviation, netWorth);
+                    if (!this.sponsorRepositoryMemory.existsSponsor(name, abbreviation))
+                        sponsorRepositoryMemory.add(newSponsor);
+                    else
+                        System.out.println("Sponsor already exists");
+                    this.adminSponsorDBMenu();
+                } catch (Exception e) {
+                    System.out.println("Please provide an Integer at the Net Worth. Press Any Button to get back");
+                    this.userInput.nextLine();
+                    this.adminSponsorDBMenu();
+                }
+
             }
             case 2 -> {
                 System.out.println("Tell us the firm's details:");
@@ -1507,10 +1767,16 @@ public class UI {
                     System.out.println("Abbreviation: ");
                     String newAbbreviation = this.userInput.nextLine();
                     System.out.println("Net worth: ");
-                    int newNetWorth = this.userInput.nextInt();
-                    Sponsor updatedSponsor = new Sponsor(newName, newAbbreviation, newNetWorth);
-                    if (sponsorRepositoryMemory.findById(name, abbreviation) != null) {
-                        sponsorRepositoryMemory.update(name, abbreviation, updatedSponsor);
+                    try {
+                        int newNetWorth = Integer.parseInt(this.userInput.nextLine());
+                        Sponsor updatedSponsor = new Sponsor(newName, newAbbreviation, newNetWorth);
+                        if (sponsorRepositoryMemory.findById(name, abbreviation) != null) {
+                            sponsorRepositoryMemory.update(name, abbreviation, updatedSponsor);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Please provide an Integer at the Net Worth. Press Any Button to get back");
+                        this.userInput.nextLine();
+                        this.adminSponsorDBMenu();
                     }
                 } else
                     System.out.println("Sponsor was not found!");

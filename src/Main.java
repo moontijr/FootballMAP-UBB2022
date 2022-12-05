@@ -1,7 +1,4 @@
-import controller.CoachController;
-import controller.PlayerController;
-import controller.SponsorController;
-import controller.TeamController;
+import controller.*;
 import repository.inmemory.CoachRepositoryMemory;
 import repository.inmemory.PlayerRepositoryMemory;
 import repository.inmemory.SponsorRepositoryMemory;

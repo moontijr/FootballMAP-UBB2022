@@ -173,5 +173,14 @@ public class PlayerController {
             return null;
     }
 
+    public boolean checkString(String sample)
+    {
+        char[] chars= sample.toCharArray();
+        for (char c: chars)
+            if(Character.isDigit(c))
+                return false;
+        return true;
+    }
+
 
 }
